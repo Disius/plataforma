@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\AcademicosController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,11 +16,25 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('academicos_components/Main');
-});
+    return Inertia::render('Inicio');
+})->name('home');
 
-// Route::prefix('academicos')->group(function () {
-//     Route::get('/', function (){
-//         return Inertia::render('academicos_components/Main');
-//     });
-// });
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::prefix('academicos')->middleware(['auth', 'role:Jefes Academicos'])->group(function (){
+    Route::get('/detecciones', [AcademicosController::class, 'index'])->name('index.necesity');
+    Route::get('/crear-deteccion', [AcademicosController::class, 'create'])->name('create.necesity');
+    Route::post('/save-deteccion', [AcademicosController::class, 'store'])->name('storage.necesity');
+    Route::get('/edit-deteccion/{id}', [AcademicosController::class, 'edit'])->name('edit.necesity');
+    Route::put('/edited-deteccion/{id}', [AcademicosController::class, 'update'])->name('update.necesity');
+});
+//Route::middleware('auth')->group(function () {
+//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+//});
+
+require __DIR__.'/auth.php';
