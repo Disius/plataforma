@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CoordinacionController;
 use App\Http\Controllers\RegistrosController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,5 +20,6 @@ use App\Http\Controllers\AcademicosController;
     return $request->user();
 });*/
 
-Route::get('/registros-docente', [RegistrosController::class, 'docente']);
-Route::get('/registros-carrera', [RegistrosController::class, 'carer']);
+Route::get('some', [CoordinacionController::class, 'existObservaciones']);
+
+

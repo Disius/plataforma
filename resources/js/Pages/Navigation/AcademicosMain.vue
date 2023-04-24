@@ -6,7 +6,6 @@
         elevation="6"
     >
         <v-toolbar extended color="light-blue-darken-1">
-            <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
             <v-toolbar-title class="text-h5">{{user[0].email}}</v-toolbar-title>
 

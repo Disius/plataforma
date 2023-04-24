@@ -119,16 +119,30 @@
                          </v-select>
                      </v-col>
                      <v-col cols="12">
-                         <v-autocomplete
-                             v-model="formN.facilitadores"
-                             variant="solo"
-                             :items="docente"
-                             item-title="nombre_completo"
-                             item-value="id"
-                             label="Facilitadores"
-                         >
-
-                         </v-autocomplete>
+                        <v-autocomplete
+                            v-model="formN.facilitadores"
+                            :hint="!isEditing ? 'Editar' : 'Lectura'"
+                            :label="`Facilitador - ${isEditing ? 'Editable' : 'Solo lectura'}`"
+                            :items="docente"
+                            :readonly="!isEditing"
+                            variant="solo"
+                            item-title="nombre_completo"
+                            item-value="id"
+                            multiple
+                        >
+                        <template v-slot:append>
+                            <v-slide-x-reverse-transition mode="out-in">
+                                <v-icon
+                                :key="`icon-$(isEditing)`"
+                                :color="isEditing ? 'success' : 'info'"
+                                :icon="isEditing ? 'mdi-check-outline' : 'mdi-circle-edit-outline'"
+                                @click="isEditing = !isEditing"
+                                >
+                                    
+                                </v-icon>
+                            </v-slide-x-reverse-transition>
+                        </template>
+                   </v-autocomplete>
                      </v-col>
                  </v-row>
                  <h2>C)	ACTIVIDADES O EVENTOS  QUE SE LLEVARÁN A CABO PARA LA FORMACIÓN DOCENTE DE EL/LA PROFESOR(A) EN LAS DIMENSIONES DE LA EVALUACIÓN DOCENTE.</h2>
@@ -279,17 +293,30 @@
                          </v-select>
                      </v-col>
                      <v-col cols="12">
-                         <v-autocomplete
-                             v-model="formN.facilitadores"
-                             variant="solo"
-                             :items="docente"
-                             item-title="nombre_completo"
-                             item-value="id"
-                             label="Facilitadores"
-                             clearable
-                         >
-
-                         </v-autocomplete>
+                        <v-autocomplete
+                            v-model="formN.facilitadores"
+                            :hint="!isEditing ? 'Editar' : 'Lectura'"
+                            :label="`Facilitador - ${isEditing ? 'Editable' : 'Solo lectura'}`"
+                            :items="docente"
+                            :readonly="!isEditing"
+                            variant="solo"
+                            item-title="nombre_completo"
+                            item-value="id"
+                            multiple
+                   >
+                        <template v-slot:append>
+                            <v-slide-x-reverse-transition mode="out-in">
+                                <v-icon
+                                :key="`icon-$(isEditing)`"
+                                :color="isEditing ? 'success' : 'info'"
+                                :icon="isEditing ? 'mdi-check-outline' : 'mdi-circle-edit-outline'"
+                                @click="isEditing = !isEditing"
+                                >
+                                    
+                                </v-icon>
+                            </v-slide-x-reverse-transition>
+                        </template>
+                   </v-autocomplete>
                      </v-col>
                  </v-row>
                  <h2>d)	ACTIVIDADES O EVENTOS QUE SE LLEVARÁN A CABO PARA LA ACTUALIZACIÓN DE EL/LA PROFESOR(A) EN ASIGNATURAS QUE SE REQUIERAN</h2>
@@ -386,7 +413,7 @@ import {usePage} from "@inertiajs/vue3";
 
 // Variables
 let valid = ref(true);
-
+const isEditing = ref(false)
 const user = computed(() => usePage().props.user[0]);
 const tipoSolicitud = ref([
     {text: "FORMACIÓN DOCENTE", value:1},
@@ -431,6 +458,7 @@ const requiredRule = ref([
 ]);
 const carrera = computed(() => usePage().props.carrera);
 const docente = computed(() => usePage().props.docentes);
+const departamento = computed(() => usePage().props.departamento);
 // props
 
 //Functions

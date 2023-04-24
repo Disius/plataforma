@@ -1,37 +1,27 @@
 <template>
-    <v-card
-        color="light-blue-darken-1"
-        flat
-        rounded="0"
-        elevation="6"
-    >
-        <v-toolbar extended color="light-blue-darken-1">
-            <v-icon
-            prepend-icon="mdi-arrow-left"
-            >
+    <!--Header-->
+    <v-app>
+        <v-card
+            color="light-blue-darken-1"
+            flat
+            rounded="0"
+            elevation="6"
+        >
+            <v-toolbar extended color="light-blue-darken-1">
+                <v-icon
+                    prepend-icon="mdi-arrow-left"
+                >
 
-            </v-icon>
+                </v-icon>
 
-            <v-toolbar-title class="text-h5">{{user.email}}</v-toolbar-title>
+                <v-toolbar-title class="text-h5">{{user.email}}</v-toolbar-title>
 
-            <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
 
-
-        </v-toolbar>
-    </v-card>
-        <v-container fluid>
-            <v-row justify="end" class="md-4 xs-3">
-                <v-col cols="4" class="lg-5">
-                    <Link href="/academicos/crear-deteccion" as="button" type="button">
-                        <v-btn prepend-icon="mdi-file-document-plus-outline" block size="x-large" type="button"
-                               color="light-blue-lighten-4">
-                            Capturar Deteccion de Necesidades
-                        </v-btn>
-                    </Link>
-                </v-col>
-            </v-row>
-        </v-container>
-        <v-container class="pt-4 mt-4">
+            </v-toolbar>
+        </v-card>
+        <!--Body-->
+        <v-container class="mt-6 pt-8">
             <v-row justify="center">
                 <v-card elevation="8">
                     <v-table
@@ -42,10 +32,19 @@
                         <thead>
                         <tr>
                             <th class="text-left">
+                                Jefe del departamento
+                            </th>
+                            <th class="text-left">
                                 Dirigido
                             </th>
                             <th class="text-left">
+                                Tipo de Necesidad
+                            </th>
+                            <th class="text-left">
                                 Nombre del curso
+                            </th>
+                            <th class="text-left">
+                                Asignatura en que requiere formacion y/o actualización
                             </th>
                             <th class="text-left">
                                 Contenido tematicos
@@ -56,11 +55,6 @@
                             <th class="text-left">
                                 Objetivo de la actividad o evento
                             </th>
-                            <template v-if="observaciones === true">
-                                <th class="text-left">
-                                    Observaciones
-                                </th>
-                            </template>
                         </tr>
                         </thead>
                         <tbody>
@@ -69,8 +63,16 @@
                             :key="deteccion.id" :class="{ itemSelected: deteccion === itemSelected }"
 
                         >
+                            <td class="v-card--hover">{{deteccion.nombreJefe}}</td>
                             <td class="v-card--hover">{{deteccion.nameCarrera}}</td>
+                            <template v-if="deteccion.tipo_FDoAP === 1">
+                                <td class="v-card--hover">FORMACIÓN DOCENTE</td>
+                            </template>
+                            <template v-if="deteccion.tipo_FDoAP === 2">
+                                <td class="v-card--hover">ACTUALIZACIÓN PROFESIONAL</td>
+                            </template>
                             <td class="v-card--hover">{{deteccion.nombreCurso}}</td>
+                            <td class="v-card--hover">{{deteccion.asignaturaFA}}</td>
                             <td class="v-card--hover">{{deteccion.contenidosTM}}</td>
                             <template v-if="deteccion.periodo === 1">
                                 <td class="v-card--hover">ENERO-JUNIO</td>
@@ -79,9 +81,6 @@
                                 <td class="v-card--hover">AGOSTO-DICIEMBRE</td>
                             </template>
                             <td class="v-card--hover">{{deteccion.objetivoEvento}}</td>
-                            <template v-if="observaciones === true">
-                                <td class="v-card--hover">{{deteccion.observaciones}}</td>
-                            </template>
                         </tr>
                         </tbody>
                     </v-table>
@@ -90,85 +89,47 @@
         </v-container>
 
 
-        <v-container class="pt-4 mt-4">
-            <v-row justify="center">
-                <v-card elevation="8">
-                    <v-table
-                        fixed-header
-                        height="300px"
-                        hover
-                    >
-                        <thead>
-                        <tr>
-                            <th class="text-left">
-                                Dirigido
-                            </th>
-                            <th class="text-left">
-                                Nombre del curso
-                            </th>
-                            <th class="text-left">
-                                Contenido tematicos
-                            </th>
-                            <th class="text-left">
-                                Periodo de Realización
-                            </th>
-                            <th class="text-left">
-                                Objetivo de la actividad o evento
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr
-                            v-for="deteccionsi in deteccionesSI"
-                            :key="deteccionsi.id"
 
-                        >
-                            <td class="v-card--hover">{{deteccionsi.nameCarrera}}</td>
-                            <td class="v-card--hover">{{deteccionsi.nombreCurso}}</td>
-                            <td class="v-card--hover">{{deteccionsi.contenidosTM}}</td>
-                            <template v-if="deteccionsi.periodo === 1">
-                                <td class="v-card--hover">ENERO-JUNIO</td>
-                            </template>
-                            <template v-if="deteccionsi.periodo === 2">
-                                <td class="v-card--hover">AGOSTO-DICIEMBRE</td>
-                            </template>
-                            <td class="v-card--hover">{{deteccionsi.objetivoEvento}}</td>
-                        </tr>
-                        </tbody>
-                    </v-table>
-                </v-card>
-            </v-row>
-        </v-container>
 
-        <v-dialog v-model="dialog" fullscreen
-                  :scrim="false"
+
+
+
+
+
+<!--        Dialog-->
+        <v-dialog v-model="dialog" fullscreen :scrim="false"
                   transition="dialog-bottom-transition">
-            <v-card>
+            <v-card class="mx-auto">
                 <v-toolbar
                     dark
-                    color="blue-lighten-1"
-
+                    color="light-blue-darken-1"
+                    prominent
+                    elevation="7"
                 >
-                    <v-btn
-                        icon
-                        dark
-                        @click="dialog = false"
-                        size="x-large"
-                    >
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                    <v-spacer></v-spacer>
-
-                    <Link :href="'/academicos/edit-deteccion' + '/' + itemSelected.id" as="button" type="button">
-                        <v-btn type="button" prepend-icon="mdi-file-edit-outline" size="x-large">
-                            Editar
+                    <v-row justify="end">
+                        <v-btn
+                            icon
+                            dark
+                            @click="dialog = false"
+                            size="x-large"
+                        >
+                            <v-icon>mdi-close</v-icon>
                         </v-btn>
-                    </Link>
-
+                    </v-row>
+<!--                    <v-toolbar-title>Settings</v-toolbar-title>-->
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+<!--                        <v-btn-->
+<!--                            variant="text"-->
+<!--                            @click="dialog = false"-->
+<!--                        >-->
+<!--                            -->
+<!--                        </v-btn>-->
+                    </v-toolbar-items>
                 </v-toolbar>
                 <v-container class="mx-auto">
                     <v-row justify="center">
-                        <v-sheet :height="850" :width="3000" :elevation="8" class="mt-3 pt-4">
+                        <v-sheet :height="970" :width="3000" :elevation="8" class="mt-3 pt-4">
                             <v-card-title class="text-center text-h5">
                                 {{itemSelected.nombreCurso}}
                             </v-card-title>
@@ -271,18 +232,25 @@
 
                                         <v-col cols="12" class="mt-4">
                                             <h4>Objetivo de la actividad o evento.</h4>
-                                            <v-card class="text-h6" elevation="0">
+                                            <v-card class="text-h6 ml-3" elevation="0">
                                                 {{itemSelected.objetivoEvento}}
                                             </v-card>
                                         </v-col>
-                                        <template v-if="itemSelected.obs === 1">
-                                            <v-col cols="12" class="mt-4">
-                                                <h4>Objetivo de la actividad o evento.</h4>
-                                                <v-card class="text-h6" elevation="0">
-                                                    {{itemSelected.observaciones}}
-                                                </v-card>
-                                            </v-col>
-                                        </template>
+                                        <v-col cols="8" class="mt-4">
+                                            <h4>Añadir observaciones</h4>
+                                            <v-form @submit.prevent="submit" ref="form">
+                                                <v-text-field
+                                                    variant="solo"
+                                                    v-model="formO.observaciones"
+                                                >
+
+                                                </v-text-field>
+
+                                                <v-btn color="light-blue-darken-1" type="submit">
+                                                    Guardar
+                                                </v-btn>
+                                            </v-form>
+                                        </v-col>
                                     </v-row>
                                 </v-container>
                             </v-card-text>
@@ -291,81 +259,62 @@
                 </v-container>
             </v-card>
         </v-dialog>
-        <v-layout class="overflow-visible" style="height: 56px">
-            <v-bottom-navigation color="light-blue-darken-1" grow>
-                <Link href="/dashboard" type="button" as="button">
-                    <v-btn type="button">
-                        <v-icon>mdi-arrow-left</v-icon>
 
-                        Volver al menu
-                    </v-btn>
-                </Link>
-            </v-bottom-navigation>
-        </v-layout>
+    </v-app>
 </template>
 
 <script setup>
+//imports
+import {router, useForm, usePage} from "@inertiajs/vue3";
 import {computed, onMounted, ref} from "vue";
-import {Link, router, usePage} from "@inertiajs/vue3";
-// props
-defineProps({
-    carer: Array
-})
-// Variables
-const dialog = ref(false);
+import axios from "axios";
+
+//variables
+const user = computed(() => usePage().props.user[0]);
 let itemSelected = ref({});
+let detecciones = computed(() => usePage().props.deteccion);
+let dialog = ref(false);
+const formO = ref({
+    aceptado: null,
+    observaciones: "",
+});
+const form = ref(null);
 // functions
 function getRow(item){
     itemSelected.value = item
     dialog.value = true
 }
-const formatDate = computed(() => {
-    return new Date(itemSelected.value.fecha_F).toLocaleDateString('es-MX');
-})
-// Computed propierties
-const user = computed(() => usePage().props.user[0]);
-const detecciones = computed(() => {
-    return usePage().props.deteccionesall.filter(need => {
-        return need.aceptado === 0 && need.id_jefe === user.value.docente_id
-    })
-});
-const observaciones = computed(() => {
-    let data = usePage().props.deteccionesall.filter(value => {
-        return value.obs
-    });
-
-    if (data.length === 0){
-        return false;
-    }else{
-        return true
-    }
-});
-const deteccionesSI = computed(() => {
-    return usePage().props.deteccionesall.filter(need => {
-        return need.aceptado === 1 && need.id_jefe === user.value.docente_id
-    })
-});
-
 const dateFormat = computed(() => {
     return new Date(itemSelected.value.fecha_I).toLocaleDateString('es-MX');
-})
-// hooks
-onMounted(() => {
+});
+const formatDate = computed(() => {
+    return new Date(itemSelected.value.fecha_F).toLocaleDateString('es-MX');
+});
 
+function submit(){
+    router.put('/desarrollo/coordinacion/observaciones' + '/' + itemSelected.value.id, formO.value);
+    reset();
+}
+
+function reset(){
+    form.value.reset();
+}
+
+onMounted(() => {
+    axios.get('/api/some').then(res => {
+        console.log(res.data)
+    }).catch(error => {
+        console.log(error)
+    });
 })
 </script>
 
 <style scoped>
-.titulo {
-    justify-content: center;
-    align-content: center;
-    container: initial;
-}
 . itemSelected {
     background-color: red;
 }
-.dialog-bottom-transition-enter-active,
-.dialog-bottom-transition-leave-active {
-    transition: transform .2s ease-in-out;
+h4 {
+    margin-left: 12px;
+    margin-bottom: 4px;
 }
 </style>

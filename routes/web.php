@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcademicosController;
+use App\Http\Controllers\CoordinacionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,6 +23,15 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::prefix('desarrollo')->middleware(['auth', 'role:Coordinacion de FD y AP'])->group(function (){
+    Route::get('/coordinacion/detecciones', [CoordinacionController::class, 'index'])->name('index.necesidad');
+
+
+
+    Route::put('/coordinacion/observaciones/{id}', [CoordinacionController::class, 'update'])->name('update.observacion');
+});
+
 
 
 Route::prefix('academicos')->middleware(['auth', 'role:Jefes Academicos'])->group(function (){
