@@ -15,13 +15,22 @@ class CoordinacionController extends Controller
     {
         $necesidades = DeteccionNecesidades::with('deteccion_facilitador')
             ->orderBy('id', 'desc')
+            ->where('aceptado', '=', 0)
+            ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
+            ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
+            ->select("deteccion_necesidades.*", "docente.nombre_completo AS nombreJefe", "carreras.nameCarrera")
+            ->get();
+        $necesidadesAceptadas = DeteccionNecesidades::with('deteccion_facilitador')
+            ->orderBy('id', 'desc')
+            ->where('aceptado', 1)
             ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
             ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
             ->select("deteccion_necesidades.*", "docente.nombre_completo AS nombreJefe", "carreras.nameCarrera")
             ->get();
 
         return Inertia::render('desarrollo/coordinacion/Necesidades', [
-            'deteccion' => $necesidades
+            'detecciones' => $necesidades,
+            'deteccionesAceptadas' => $necesidadesAceptadas
         ]);
     }
 
@@ -36,9 +45,20 @@ class CoordinacionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
+        $request->validate([
+            'aceptado' => ['required']
+        ]);
+
+
+        $detecciones = DeteccionNecesidades::find($id);
+
+        $detecciones->aceptado = $request->aceptado;
+
+        $detecciones->save();
+
+        return redirect()->route('index.necesidad');
     }
 
     /**

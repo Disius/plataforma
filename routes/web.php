@@ -27,9 +27,10 @@ Route::get('/dashboard', function () {
 Route::prefix('desarrollo')->middleware(['auth', 'role:Coordinacion de FD y AP'])->group(function (){
     Route::get('/coordinacion/detecciones', [CoordinacionController::class, 'index'])->name('index.necesidad');
 
-
+    
 
     Route::put('/coordinacion/observaciones/{id}', [CoordinacionController::class, 'update'])->name('update.observacion');
+    Route::put('/coordinacion/aceptado/{id}', [CoordinacionController::class, 'store'])->name('update.aceptado');
 });
 
 
