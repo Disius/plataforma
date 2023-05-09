@@ -12,7 +12,7 @@
                                     <v-text-field label="Email" variant="solo" clearable v-model="form.email"></v-text-field>
                                 </v-col>
                                 <v-col cols="10" class="mt-8">
-                                    <v-text-field type="password" label="Contraseña" variant="solo" clearable :rules="passwordRules" v-model="form.password"></v-text-field>
+                                    <v-text-field type="password" label="Contraseña" variant="solo" clearable v-model="form.password"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row justify="end">
@@ -27,10 +27,12 @@
                     <v-spacer></v-spacer>
                     <v-card-actions>
                         <v-row justify="center">
-                            <v-col cols="12">
-                                <v-btn block>
-                                    Registrarse
-                                </v-btn>
+                            <v-col cols="5">
+                                <Link as="button" type="button" href="/register" :data="{role: props.role}">
+                                    <v-btn block type="button">
+                                        Registrarse
+                                    </v-btn>
+                                </Link>
                             </v-col>
                         </v-row>
                     </v-card-actions>
@@ -41,21 +43,18 @@
 </template>
 
 <script setup>
-import {useForm} from "@inertiajs/vue3";
+import {useForm, Link} from "@inertiajs/vue3";
 import {ref} from "vue";
-
 const form = useForm({
     email: null,
     password: null,
 });
 
-const passwordRules = ref([
-    value => {
-        if (value?.length >= 8) return true
+const props = defineProps({
+    role: null
+})
 
-        return 'La contraseña debe ser de almenos 8 caracteres'
-    }
-])
+
 </script>
 
 <style scoped>

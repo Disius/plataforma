@@ -11,10 +11,14 @@ class Docente extends Model
     protected $table = 'docente';
 
     protected $fillable = [ 'rfc', 'curp', 'nombre', 'apellidoPat', 'apellidoMat',
-        'sexo', 'email', 'clave_departamento', 'telefono', 'interno', 'carrera_id'
+        'sexo', 'email', 'clave_departamento', 'telefono', 'interno', 'carrera_id', 'user_id'
     ];
 
     public function facilitador_has_deteccion(){
         return $this->belongsToMany(DeteccionNecesidades::class, 'deteccion_has_facilitadores', 'docente_id', 'deteccion_id');
+    }
+
+    public function docente_inscrito(){
+        return $this->belongsToMany(Curso::class, 'inscripcion', 'docente_id', 'curso_id');
     }
 }

@@ -19,7 +19,7 @@
 
         </v-toolbar>
     </v-card>
-        <v-container fluid>
+        <v-container class="mx-auto">
             <v-row justify="end" class="md-4 xs-3">
                 <v-col cols="4" class="lg-5">
                     <Link href="/academicos/crear-deteccion" as="button" type="button">
@@ -65,7 +65,7 @@
                         </thead>
                         <tbody>
                         <tr
-                            v-for="deteccion in detecciones" @click="getRow(deteccion)"
+                            v-for="deteccion in detection" @click="getRow(deteccion)"
                             :key="deteccion.id" :class="{ itemSelected: deteccion === itemSelected }"
 
                         >
@@ -324,7 +324,7 @@ const formatDate = computed(() => {
 })
 // Computed propierties
 const user = computed(() => usePage().props.user[0]);
-const detecciones = computed(() => {
+const detection = computed(() => {
     return usePage().props.deteccionesall.filter(need => {
         return need.aceptado === 0 && need.id_jefe === user.value.docente_id
     })

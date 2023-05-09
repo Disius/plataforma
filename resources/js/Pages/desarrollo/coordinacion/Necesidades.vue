@@ -1,6 +1,5 @@
 <template>
-    <!--Header-->
-    <v-app>
+
         <v-card color="light-blue-darken-1" flat rounded="0" elevation="6">
             <v-toolbar extended color="light-blue-darken-1">
                 <v-icon prepend-icon="mdi-arrow-left"> </v-icon>
@@ -13,11 +12,13 @@
             </v-toolbar>
         </v-card>
         <!--Body-->
-        <v-container class="mt-6 pt-8">
-            <v-row justify="center">
-                <v-card elevation="8">
-                    <v-table fixed-header height="300px" hover>
-                        <thead>
+        <template v-if="detection.length > 0">
+            <v-card class="text-center text-h4" elevation="0">Nuevas</v-card>
+            <v-container class="mt-2 pt-2">
+                <v-row justify="center">
+                    <v-card elevation="8">
+                        <v-table fixed-header height="500px" hover>
+                            <thead>
                             <tr>
                                 <th class="text-left">Jefe del departamento</th>
                                 <th class="text-left">Dirigido</th>
@@ -35,10 +36,10 @@
                                     Objetivo de la actividad o evento
                                 </th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <tr
-                                v-for="deteccion in detecciones"
+                                v-for="deteccion in detection"
                                 @click="getRow(deteccion)"
                                 :key="deteccion.id"
                                 :class="{
@@ -82,16 +83,18 @@
                                     {{ deteccion.objetivoEvento }}
                                 </td>
                             </tr>
-                        </tbody>
-                    </v-table>
-                </v-card>
-            </v-row>
-        </v-container>
+                            </tbody>
+                        </v-table>
+                    </v-card>
+                </v-row>
+            </v-container>
+        </template>
 
-        <v-container class="mt-6 pt-8">
+        <v-card class="text-center text-h4 mt-2 pt-2" elevation="0">Todos los registros</v-card>
+        <v-container class="mt-2 pt-2">
             <v-row justify="center">
                 <v-card elevation="8">
-                    <v-table fixed-header height="300px" hover>
+                    <v-table fixed-header height="500px" hover>
                         <thead>
                             <tr>
                                 <th class="text-left">Jefe del departamento</th>
@@ -162,7 +165,6 @@
                 </v-card>
             </v-row>
         </v-container>
-
         <!--        Dialog-->
         <v-dialog
             v-model="dialog"
@@ -190,15 +192,26 @@
                     >
                         <v-row justify="center">
                             <v-form @submit.prevent="aceptadoSubmit">
-                                <v-btn
-                                    dark
-                                    size="x-large"
-                                    block
-                                    prepend-icon="mdi-check"
-                                    type="submit"
-                                >
-                                    Aceptar
-                                </v-btn>
+                                    <v-btn
+                                        dark
+                                        size="x-large"
+                                        block
+                                        prepend-icon="mdi-check"
+                                        type="submit"
+                                    >
+                                        Aceptar
+                                    </v-btn>
+                            </v-form>
+                            <v-form @submit.prevent="saveCurso">
+                                    <v-btn
+                                        dark
+                                        size="x-large"
+                                        block
+                                        prepend-icon="mdi-check"
+                                        type="submit"
+                                    >
+                                        Guardar Curso
+                                    </v-btn>
                             </v-form>
                         </v-row>
                     </template>
@@ -483,21 +496,31 @@
                 </v-container>
             </v-card>
         </v-dialog>
-    </v-app>
+
+    <v-layout class="overflow-visible" style="height: 56px">
+        <v-bottom-navigation color="light-blue-darken-1" grow>
+            <Link href="/dashboard" type="button" as="button">
+                <v-btn type="button">
+                    <v-icon>mdi-arrow-left</v-icon>
+
+                    Volver al menu
+                </v-btn>
+            </Link>
+        </v-bottom-navigation>
+    </v-layout>
 </template>
 
 <script setup>
 //imports
-import { router, useForm, usePage } from "@inertiajs/vue3";
+import { router, useForm, usePage, Link } from "@inertiajs/vue3";
 import { computed, onMounted, ref } from "vue";
 import axios from "axios";
 
 
 //props
-defineProps({
-    detecciones: []
-})
+
 //variables
+let detection = computed(() => usePage().props.detection);
 const user = computed(() => usePage().props.user[0]);
 let itemSelected = ref({});
 let deteccionesaceptadas = computed(() => usePage().props.deteccionesAceptadas);
@@ -505,6 +528,20 @@ let dialog = ref(false);
 const formO = ref({
     aceptado: null,
     observaciones: "",
+});
+const formCurso = ref({
+    nameCurso: "",
+    tipo_curso: null,
+    objetivo: "",
+    fecha_I: null,
+    fecha_F: null,
+    hora_I: null,
+    hora_F: null,
+    lugar: null,
+    dirigido: null,
+    duracion: null,
+    observaciones: "",
+    tipo_actividad: null,
 });
 const form = ref(null);
 // functions
@@ -527,6 +564,20 @@ function submit() {
     reset();
 }
 
+function saveCurso(){
+    formCurso.value.nameCurso = itemSelected.value.nombreCurso;
+    formCurso.value.tipo_curso = itemSelected.value.tipo_FDoAP;
+    formCurso.value.objetivo = itemSelected.value.objetivoEvento;
+    formCurso.value.fecha_I = itemSelected.value.fecha_I;
+    formCurso.value.fecha_F = itemSelected.value.fecha_F;
+    formCurso.value.hora_I = itemSelected.value.hora_I;
+    formCurso.value.hora_F = itemSelected.value.hora_F;
+    formCurso.value.dirigido = itemSelected.value.carrera_dirigido;
+    formCurso.value.observaciones = itemSelected.value.observaciones;
+    formCurso.value.tipo_actividad = itemSelected.value.tipo_actividad;
+    formCurso.value.periodo = itemSelected.value.periodo;
+    router.post('/desarrollo/coordinacion/guardado', formCurso.value);
+}
 function aceptadoSubmit() {
     formO.value.aceptado = 1;
     router.put(

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nameCurso', 60);
             $table->integer('tipo_curso');
-            $table->integer('objetivo', 60);
+            $table->string('objetivo', 60);
             $table->date('fecha_I');
             $table->date('fecha_F');
             $table->integer('lugar');

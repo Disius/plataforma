@@ -138,7 +138,7 @@
                                 :icon="isEditing ? 'mdi-check-outline' : 'mdi-circle-edit-outline'"
                                 @click="isEditing = !isEditing"
                                 >
-                                    
+
                                 </v-icon>
                             </v-slide-x-reverse-transition>
                         </template>
@@ -312,7 +312,7 @@
                                 :icon="isEditing ? 'mdi-check-outline' : 'mdi-circle-edit-outline'"
                                 @click="isEditing = !isEditing"
                                 >
-                                    
+
                                 </v-icon>
                             </v-slide-x-reverse-transition>
                         </template>
@@ -467,10 +467,15 @@ function validate(){
 }
 
 const carreraFilter = computed(() => {
-    return carrera.value.filter(carer => {
-        return carer.departamento_id === user.value.departamento_id
-    })
-})
+    let filtro = carrera.value.filter(carer => {
+         return carer.departamento_id === user.value.departamento_id
+    });
+    const addTodas =  {nameCarrera: "TODAS LAS CARRERAS", id: 11}
+
+    filtro.push(addTodas);
+
+    return filtro;
+});
 
 onMounted(() => {
 

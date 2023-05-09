@@ -27,7 +27,7 @@
         <v-container>
             <v-row justify="start" class="mt-5 pt-2">
                 <v-col>
-                    <Link as="card" type="card" href="/desarrollo/coordinacion/detecciones" method="get">
+                    <Link as="card" type="card" href="/desarrollo/coordinacion/deteccion" method="get">
                         <v-card elevation="8" width="500" height="400" link type="card">
                             <v-card-title class="text-center text-h5">DETECCION DE NECESIDADES</v-card-title>
                             <v-card-text>
@@ -37,7 +37,7 @@
                     </Link>
                 </v-col>
                 <v-col>
-                    <Link as="card" type="card" href="/academicos/detecciones" method="get">
+                    <Link as="card" type="card" href="/desarrollo/coordinacion/cursos" method="get">
                         <v-card elevation="8" link class="" height="400" width="500">
                             <v-card-title class="text-center text-h5">CURSOS</v-card-title>
                         </v-card>
@@ -45,6 +45,7 @@
                 </v-col>
             </v-row>
         </v-container>
+
     </v-app>
 </template>
 

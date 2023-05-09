@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Curso;
 use App\Models\DeteccionNecesidades;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CoordinacionController extends Controller
@@ -29,7 +31,7 @@ class CoordinacionController extends Controller
             ->get();
 
         return Inertia::render('desarrollo/coordinacion/Necesidades', [
-            'detecciones' => $necesidades,
+            'detection' => $necesidades,
             'deteccionesAceptadas' => $necesidadesAceptadas
         ]);
     }
@@ -107,6 +109,24 @@ class CoordinacionController extends Controller
         return response()->json([
             'response' => $detecciones->isDirty()
         ]);
+
+    }
+
+    public function indexCursos(){
+        $cursos = DB::table('cursos')
+                    ->join('carreras', 'carreras.id', '=', 'cursos.dirigido')
+                    ->select('cursos.*', 'carreras.nameCarrera AS nombreCarrera')
+                    ->get();
+        return Inertia::render('desarrollo/coordinacion/curso/Curso', [
+            'cursos' => $cursos
+        ]);
+    }
+
+    public function storeCursos(Request $request){
+
+        $curso = Curso::create($request->all());
+
+        $curso->save();
 
     }
 }

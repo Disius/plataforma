@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Carrera;
+use App\Models\Curso;
 use App\Models\Departamento;
 use App\Models\DeteccionNecesidades;
 use App\Models\Docente;
@@ -115,14 +116,14 @@ class AcademicosController extends Controller
             'relation' => $relationDocente,
         ]);
     }
-    
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id): \Illuminate\Http\RedirectResponse
     {
-        
+
         $deteccion = DeteccionNecesidades::find($id);
 
         if($request->input('asignaturaFA') != null){
@@ -182,5 +183,30 @@ class AcademicosController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function cursoIndex(){
+        $cursos = DB::table('cursos')
+            ->join('carreras', 'carreras.id', '=', 'cursos.dirigido')
+            ->select('cursos.*', 'carreras.nameCarrera AS nombreCarrera')
+            ->get();
+
+        return Inertia::render('academicos/curso/Curso', [
+            'cursos' => $cursos
+        ]);
+    }
+
+    public function indexDocente(){
+
+        $docentesBase = DB::table('docente')->where('tipo_plaza', '=', 1)
+                                                ->get();
+        $docentes = DB::table('docente')
+            ->join('tipo_plaza' , 'tipo_plaza.id', '=', 'docente.tipo_plaza')
+            ->select('docente.*', 'tipo_plaza.nombre AS plazaNombre')
+            ->get();
+        return Inertia::render('academicos/docente/Docente', [
+            'docentes' => $docentes,
+            'docentesBase' => $docentesBase,
+        ]);
     }
 }

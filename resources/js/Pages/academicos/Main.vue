@@ -1,22 +1,20 @@
 <template>
     <v-app>
         <AcademicosMain></AcademicosMain>
-        <v-container>
-            <v-row justify="start" class="mt-5 pt-2">
-                <v-col>
-                    <Link as="card" type="card" href="/academicos/detecciones" method="get">
-                        <v-card elevation="8" width="500" height="400" link type="card">
-                            <v-card-title class="text-center text-h5">DETECCION DE NECESIDADES</v-card-title>
-                            <v-card-text>
-
-                            </v-card-text>
-                        </v-card>
-                    </Link>
-                </v-col>
-                <v-col>
-                    <Link as="card" type="card" href="/academicos/detecciones" method="get">
-                        <v-card elevation="8" link class="" height="400" width="500">
-                            <v-card-title class="text-center text-h5">CURSOS</v-card-title>
+        <v-container class="mx-auto">
+            <v-row justify="center" class="">
+                <v-col
+                    v-for="card in cards" :key="card.id" :cols="card.flex"
+                >
+                    <Link :href="card.route" type="card" as="card">
+                        <v-card
+                            elevation="8"
+                            height="200px"
+                            class="d-flex justify-center align-center"
+                            link
+                            type="card"
+                        >
+                            <span class="text-h5">{{ card.name }}</span>
                         </v-card>
                     </Link>
                 </v-col>
@@ -30,6 +28,23 @@ import AcademicosMain from "../Navigation/AcademicosMain.vue";
 import {Link} from "@inertiajs/vue3";
 import {ref} from "vue";
 
+const cards = ref([
+    {
+        flex: 6,
+        name: "Deteccion de Necesidades",
+        route: "/academicos/detecciones",
+    },
+    {
+        flex: 6,
+        name: "Cursos",
+        route: "/academicos/cursos",
+    },
+    {
+        flex: 6,
+        name: "Docentes",
+        route: "/academicos/docentes",
+    },
+]);
 </script>
 
 <style scoped>
