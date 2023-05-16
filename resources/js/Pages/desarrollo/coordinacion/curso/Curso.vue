@@ -1,15 +1,15 @@
 <template>
-    <v-card color="light-blue-darken-1" flat rounded="0" elevation="6">
-        <v-toolbar extended color="light-blue-darken-1">
-            <v-icon prepend-icon="mdi-arrow-left"> </v-icon>
+    <v-layout class="" style="height: 50px">
+        <v-app-bar color="blue-lighten-1">
+            <Link href="/dashboard" type="button" as="button">
+                <v-btn type="button" size="x-large" icon="mdi-arrow-left">
 
-            <v-toolbar-title class="text-h5">{{
-                    user.email
-                }}</v-toolbar-title>
+                </v-btn>
+            </Link>
 
-            <v-spacer></v-spacer>
-        </v-toolbar>
-    </v-card>
+            <v-app-bar-title class="text-center ml-0 text-h5">{{user.email}}</v-app-bar-title>
+        </v-app-bar>
+    </v-layout>
     <v-container class="mt-4 pt-4">
         <v-row justify="center">
             <v-card elevation="8">
@@ -292,7 +292,7 @@
 
 <script setup>
 import {computed, ref} from "vue";
-import {usePage} from "@inertiajs/vue3";
+import {usePage, Link} from "@inertiajs/vue3";
 
 const user = computed(() => usePage().props.user[0]);
 let itemSelected = ref({});

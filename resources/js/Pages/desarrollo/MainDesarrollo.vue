@@ -1,31 +1,14 @@
 <template>
     <v-app>
-        <v-card
-            color="light-blue-darken-1"
-            flat
-            rounded="0"
-            elevation="6"
-        >
-            <v-toolbar extended color="light-blue-darken-1">
-                <v-icon
-                    prepend-icon="mdi-arrow-left"
-                >
-
-                </v-icon>
-
-                <v-toolbar-title class="text-h5">{{user.email}}</v-toolbar-title>
-
-                <v-spacer></v-spacer>
-
-                <Link as="button" type="button" href="/logout" method="post">
-                    <v-btn icon type="button">
-                        <v-icon>mdi-logout</v-icon>
-                    </v-btn>
-                </Link>
-            </v-toolbar>
-        </v-card>
-        <v-container>
-            <v-row justify="start" class="mt-5 pt-2">
+        <v-app-bar color="blue-lighten-1">
+            <v-app-bar-title class="text-h5">{{user.email}}</v-app-bar-title>
+            <Link as="button" type="button" href="/logout" method="post">
+                <v-btn icon="mdi-logout" type="button" size="x-large">
+                </v-btn>
+            </Link>
+        </v-app-bar>
+        <v-container class="mt-12 pt-12">
+            <v-row justify="start" class="">
                 <v-col>
                     <Link as="card" type="card" href="/desarrollo/coordinacion/deteccion" method="get">
                         <v-card elevation="8" width="500" height="400" link type="card">

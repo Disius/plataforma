@@ -28,15 +28,9 @@ class DocentesController extends Controller
         $tipoPlaza = DB::table('tipo_plaza')->select('id', 'nombre')->get();
         $puesto = DB::table('puesto')->select('id', 'nombre')->get();
 
+        $auth = Auth::user()->docente_id;
 
-
-        $docente = DB::table('docente')
-            ->where('docente.id', '=', \auth()->user()->docente_id)
-            ->join('departamento', 'departamento.id', '=', 'docente.departamento_id')
-            ->join('carreras', 'carreras.id', '=', 'docente.carrera_id')
-            ->join('tipo_plaza' , 'tipo_plaza.id', '=', 'docente.tipo_plaza')
-            ->join('puesto', 'puesto.id', '=', 'docente.id_puesto')
-            ->select('docente.*', 'carreras.nameCarrera AS NombreCarrera', 'departamento.nameDepartamento AS departamentoNombre', 'tipo_plaza.nombre AS plazaNombre', 'tipo_plaza.id AS ID')
+        $docente = Docente::where('docente.id', $auth)
             ->first();
 
 
@@ -109,7 +103,8 @@ class DocentesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
+        $input = $request->except(['created_at', 'updated_at']);
+        Docente::where('id', $id)->update($input);
     }
 
     /**

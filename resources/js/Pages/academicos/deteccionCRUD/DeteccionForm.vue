@@ -1,26 +1,16 @@
 <template>
  <v-app>
      <v-form @submit.prevent="formN.post('/academicos/save-deteccion')" ref="form">
-         <v-toolbar
-             outlined
-             hide-overlay
-             color="light-blue-darken-1"
-             dark
-             flat
-             elevation="6"
-             tile
-         >
-
-             <v-toolbar-title class="text-h4">Captura de Deteccion de Necesidades</v-toolbar-title>
-             <v-spacer></v-spacer>
-
-                <v-btn color="white" type="submit" :disabled="!valid"
-                            @click="!validate" prepend-icon="mdi-content-save-check-outline"
-                            size="x-large" rounded>
-                    Guardar
-                </v-btn>
-
-         </v-toolbar>
+         <v-layout class="" style="height: 70px">
+             <v-app-bar color="blue-lighten-1" style="position: fixed">
+                 <v-app-bar-title class="text-h4">Captura de Deteccion de Necesidades</v-app-bar-title>
+                 <v-btn color="white" type="submit" :disabled="!valid"
+                        @click="!validate" prepend-icon="mdi-content-save-check-outline"
+                        size="x-large" rounded>
+                     Guardar
+                 </v-btn>
+             </v-app-bar>
+         </v-layout>
          <div class="text-center">
              <v-dialog v-model="dialog" width="auto" persistent>
                  <v-card width="500" height="300">

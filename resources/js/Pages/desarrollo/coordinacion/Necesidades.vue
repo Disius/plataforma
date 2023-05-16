@@ -1,16 +1,16 @@
 <template>
 
-        <v-card color="light-blue-darken-1" flat rounded="0" elevation="6">
-            <v-toolbar extended color="light-blue-darken-1">
-                <v-icon prepend-icon="mdi-arrow-left"> </v-icon>
+        <v-layout class="" style="height: 50px">
+            <v-app-bar color="blue-lighten-1">
+                <Link href="/dashboard" type="button" as="button">
+                    <v-btn type="button" size="x-large" icon="mdi-arrow-left">
 
-                <v-toolbar-title class="text-h5">{{
-                    user.email
-                }}</v-toolbar-title>
+                    </v-btn>
+                </Link>
 
-                <v-spacer></v-spacer>
-            </v-toolbar>
-        </v-card>
+                <v-app-bar-title class="text-center ml-0 text-h5">{{user.email}}</v-app-bar-title>
+            </v-app-bar>
+        </v-layout>
         <!--Body-->
         <template v-if="detection.length > 0">
             <v-card class="text-center text-h4" elevation="0">Nuevas</v-card>
@@ -496,18 +496,6 @@
                 </v-container>
             </v-card>
         </v-dialog>
-
-    <v-layout class="overflow-visible" style="height: 56px">
-        <v-bottom-navigation color="light-blue-darken-1" grow>
-            <Link href="/dashboard" type="button" as="button">
-                <v-btn type="button">
-                    <v-icon>mdi-arrow-left</v-icon>
-
-                    Volver al menu
-                </v-btn>
-            </Link>
-        </v-bottom-navigation>
-    </v-layout>
 </template>
 
 <script setup>

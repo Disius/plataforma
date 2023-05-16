@@ -1,8 +1,13 @@
 <template>
-    <v-app>
-        <AcademicosMain></AcademicosMain>
-        <v-container class="mx-auto">
-            <v-row justify="center" class="">
+        <v-app-bar color="blue-lighten-1">
+            <v-app-bar-title class="text-h5">{{user.email}}</v-app-bar-title>
+            <Link as="button" type="button" href="/logout" method="post">
+                <v-btn icon="mdi-logout" type="button" size="x-large">
+                </v-btn>
+            </Link>
+        </v-app-bar>
+        <v-container class="mt-8 pt-8">
+            <v-row justify="center" class="mt-5 mt-5">
                 <v-col
                     v-for="card in cards" :key="card.id" :cols="card.flex"
                 >
@@ -20,14 +25,14 @@
                 </v-col>
             </v-row>
         </v-container>
-    </v-app>
 </template>
 
 <script setup>
-import AcademicosMain from "../Navigation/AcademicosMain.vue";
-import {Link} from "@inertiajs/vue3";
-import {ref} from "vue";
+import {Link, usePage} from "@inertiajs/vue3";
+import {computed, ref} from "vue";
 
+
+const user = computed(() => usePage().props.user[0])
 const cards = ref([
     {
         flex: 6,

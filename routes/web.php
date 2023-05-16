@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcademicosController;
+use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\CoordinacionController;
 use App\Http\Controllers\DocentesController;
 use App\Http\Controllers\ProfileController;
@@ -20,6 +21,9 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Inicio');
 })->name('home');
+
+Route::get('/tectuxtla-logo', [ConfigController::class, 'image']);
+Route::get('/tecnm-logo', [ConfigController::class, 'imageTecnm']);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -56,7 +60,7 @@ Route::prefix('docentes')->middleware(['auth', 'role:Docentes'])->group(function
 
     Route::get('/mis-datos', [DocentesController::class, 'indexMyInfo'])->name('index.docenteInfo');
     Route::post('/guardar', [DocentesController::class, 'store'])->name('store.docente');
-    Route::post('/guardar/{id}', [DocentesController::class, 'update'])->name('update.info');
+    Route::put('/guardar/{id}', [DocentesController::class, 'update'])->name('update.info');
 });
 //Route::middleware('auth')->group(function () {
 //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

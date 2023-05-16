@@ -13,7 +13,7 @@
 
     <v-container class="mx-auto">
         <v-row justify="center" class="mt-4">
-            <v-sheet :width="4000" elevation="8">
+            <v-sheet :width="1100" elevation="8">
                 <h1>Información personal</h1>
                 <v-divider></v-divider>
                 <v-form @submit.prevent="submit">
@@ -155,7 +155,7 @@
                                     <v-select
                                         :items="plaza"
                                         item-title="nombre"
-                                        item-value="ID"
+                                        item-value="id"
                                         v-model="docente.tipo_plaza"
                                     >
                                     </v-select>
@@ -254,7 +254,7 @@ function submit() {
     if (docente.value === null){
         router.post('/docentes/guardar', formDocente.value);
     }else if(docente.value != null){
-        return "Aca se actualiza"
+        router.put('/docentes/guardar' + '/' + docente.value.id, docente.value);
     }
 }
 </script>

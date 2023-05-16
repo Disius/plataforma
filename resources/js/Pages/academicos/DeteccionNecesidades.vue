@@ -1,26 +1,22 @@
 <template>
-    <v-card
-        color="light-blue-darken-1"
-        flat
-        rounded="0"
-        elevation="6"
-    >
-        <v-toolbar extended color="light-blue-darken-1">
-            <v-icon
-            prepend-icon="mdi-arrow-left"
-            >
+        <v-layout class="" style="height: 50px">
+            <v-app-bar color="blue-lighten-1">
+                <Link href="/dashboard" type="button" as="button">
+                    <v-btn type="button" size="x-large" icon="mdi-arrow-left">
 
-            </v-icon>
+                    </v-btn>
+                </Link>
 
-            <v-toolbar-title class="text-h5">{{user.email}}</v-toolbar-title>
-
-            <v-spacer></v-spacer>
-
-
-        </v-toolbar>
-    </v-card>
-        <v-container class="mx-auto">
+                <v-app-bar-title class="text-center ml-0 text-h5">{{user.email}}</v-app-bar-title>
+            </v-app-bar>
+        </v-layout>
+        <v-container class="mt-5 pt-5">
             <v-row justify="end" class="md-4 xs-3">
+                <v-col cols="8">
+                    <v-btn prepend-icon="mdi-file-pdf-box" size="x-large">
+                        Genarar Deteccion de Necesidades
+                    </v-btn>
+                </v-col>
                 <v-col cols="4" class="lg-5">
                     <Link href="/academicos/crear-deteccion" as="button" type="button">
                         <v-btn prepend-icon="mdi-file-document-plus-outline" block size="x-large" type="button"
@@ -31,63 +27,65 @@
                 </v-col>
             </v-row>
         </v-container>
-        <v-container class="pt-4 mt-4">
-            <v-row justify="center">
-                <v-card elevation="8">
-                    <v-table
-                        fixed-header
-                        height="300px"
-                        hover
-                    >
-                        <thead>
-                        <tr>
-                            <th class="text-left">
-                                Dirigido
-                            </th>
-                            <th class="text-left">
-                                Nombre del curso
-                            </th>
-                            <th class="text-left">
-                                Contenido tematicos
-                            </th>
-                            <th class="text-left">
-                                Periodo de Realización
-                            </th>
-                            <th class="text-left">
-                                Objetivo de la actividad o evento
-                            </th>
-                            <template v-if="observaciones === true">
-                                <th class="text-left">
-                                    Observaciones
-                                </th>
-                            </template>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr
-                            v-for="deteccion in detection" @click="getRow(deteccion)"
-                            :key="deteccion.id" :class="{ itemSelected: deteccion === itemSelected }"
-
+        <template v-if="detection.length > 0">
+            <v-container class="pt-4 mt-4">
+                <v-row justify="center">
+                    <v-card elevation="8">
+                        <v-table
+                            fixed-header
+                            height="300px"
+                            hover
                         >
-                            <td class="v-card--hover">{{deteccion.nameCarrera}}</td>
-                            <td class="v-card--hover">{{deteccion.nombreCurso}}</td>
-                            <td class="v-card--hover">{{deteccion.contenidosTM}}</td>
-                            <template v-if="deteccion.periodo === 1">
-                                <td class="v-card--hover">ENERO-JUNIO</td>
-                            </template>
-                            <template v-if="deteccion.periodo === 2">
-                                <td class="v-card--hover">AGOSTO-DICIEMBRE</td>
-                            </template>
-                            <td class="v-card--hover">{{deteccion.objetivoEvento}}</td>
-                            <template v-if="observaciones === true">
-                                <td class="v-card--hover">{{deteccion.observaciones}}</td>
-                            </template>
-                        </tr>
-                        </tbody>
-                    </v-table>
-                </v-card>
-            </v-row>
-        </v-container>
+                            <thead>
+                            <tr>
+                                <th class="text-left">
+                                    Dirigido
+                                </th>
+                                <th class="text-left">
+                                    Nombre del curso
+                                </th>
+                                <th class="text-left">
+                                    Contenido tematicos
+                                </th>
+                                <th class="text-left">
+                                    Periodo de Realización
+                                </th>
+                                <th class="text-left">
+                                    Objetivo de la actividad o evento
+                                </th>
+                                <template v-if="observaciones === true">
+                                    <th class="text-left">
+                                        Observaciones
+                                    </th>
+                                </template>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr
+                                v-for="deteccion in detection" @click="getRow(deteccion)"
+                                :key="deteccion.id" :class="{ itemSelected: deteccion === itemSelected }"
+
+                            >
+                                <td class="v-card--hover">{{deteccion.nameCarrera}}</td>
+                                <td class="v-card--hover">{{deteccion.nombreCurso}}</td>
+                                <td class="v-card--hover">{{deteccion.contenidosTM}}</td>
+                                <template v-if="deteccion.periodo === 1">
+                                    <td class="v-card--hover">ENERO-JUNIO</td>
+                                </template>
+                                <template v-if="deteccion.periodo === 2">
+                                    <td class="v-card--hover">AGOSTO-DICIEMBRE</td>
+                                </template>
+                                <td class="v-card--hover">{{deteccion.objetivoEvento}}</td>
+                                <template v-if="observaciones === true">
+                                    <td class="v-card--hover">{{deteccion.observaciones}}</td>
+                                </template>
+                            </tr>
+                            </tbody>
+                        </v-table>
+                    </v-card>
+                </v-row>
+            </v-container>
+        </template>
 
 
         <v-container class="pt-4 mt-4">
@@ -291,17 +289,6 @@
                 </v-container>
             </v-card>
         </v-dialog>
-        <v-layout class="overflow-visible" style="height: 56px">
-            <v-bottom-navigation color="light-blue-darken-1" grow>
-                <Link href="/dashboard" type="button" as="button">
-                    <v-btn type="button">
-                        <v-icon>mdi-arrow-left</v-icon>
-
-                        Volver al menu
-                    </v-btn>
-                </Link>
-            </v-bottom-navigation>
-        </v-layout>
 </template>
 
 <script setup>
@@ -334,11 +321,7 @@ const observaciones = computed(() => {
         return value.obs
     });
 
-    if (data.length === 0){
-        return false;
-    }else{
-        return true
-    }
+    return data.length !== 0;
 });
 const deteccionesSI = computed(() => {
     return usePage().props.deteccionesall.filter(need => {
