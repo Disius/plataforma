@@ -20,38 +20,62 @@
             </v-img>
         </v-app-bar>
         <v-main>
-            <v-container class="pt-6 mt-5">
-                <v-row justify="center">
-                    <v-card width="600" height="100" elevation="9">
-                        <v-card-text>
-                            <v-row justify="center">
-                                <v-col align-self="center" cols="12">
-                                    
-                                </v-col>
-                                <v-col cols="5" align-self="end">
-                                    <v-btn>
+            <v-form ref="form" @submit.prevent="submit">
+                    <v-container class="mt-16 pt-16">
+                        <v-row justify="center">
+                            <v-card width="700" height="400" elevation="0">
+                                <v-card-text>
+                                    <v-row justify="center">
+                                        <v-col cols="6">
+                                            <v-text-field label="Nombre" variant="solo" v-model="formRegistro.name" clearable>
 
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                </v-row>
-            </v-container>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-text-field label="Correo Institucional" variant="solo" v-model="formRegistro.email" clearable>
+
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-text-field :rules="passwordRule" label="Contraseña" variant="solo" clearable type="password" v-model="formRegistro.password">
+
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-select :items="departamento" item-title="nameDepartamento" item-value="id" label="Departamento Adscrito" variant="solo" clearable v-model="formRegistro.departamento_id">
+
+                                            </v-select>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                                    <v-row justify="end" class="mr-4">
+                                        <v-col cols="5" align-self="end">
+                                            <v-btn size="x-large" block append-icon="mdi-login-variant" type="submit">
+                                                Ingresar
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                            </v-card>
+                        </v-row>
+                    </v-container>
+            </v-form>
         </v-main>
     </v-layout>
 </template>
 
 <script setup>
 import { computed, ref } from "vue";
-import { useForm, usePage } from "@inertiajs/vue3";
-import MainNav from "../navigation/MainNav.vue";
+import {router, useForm, usePage} from "@inertiajs/vue3";
 
+let departamento = computed(() => {
+    return usePage().props.departamento
+});
 let docentes = computed(() => usePage().props.docentes);
-const role = computed(() => usePage().props.role);
-console.log(role.value)
+const role = computed(() => {
+    return Number(usePage().props.role)
+});
 const form = ref();
-const formRegistro = useForm({
+const formRegistro = ref({
     id_docente: null,
     email: "",
     password: "",
@@ -59,7 +83,16 @@ const formRegistro = useForm({
     name: "",
     departamento_id: null,
 });
+const passwordRule = [
+    value => {
+        if (value?.length >= 8) return true
 
+        return 'LA CONTRASEÑA DEBE TENER AL MENOS 8 CARACTERES'
+    },
+]
+function submit(){
+    router.post('register', formRegistro.value)
+}
 </script>
 
 <style scoped>

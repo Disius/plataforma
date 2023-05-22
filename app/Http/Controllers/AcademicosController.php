@@ -16,13 +16,14 @@ class AcademicosController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): \Inertia\Response
+    public function index()
     {
-        $deteccionesAll = DeteccionNecesidades::with('deteccion_facilitador')->orderBy('id', 'desc')
-            ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
-            ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
-            ->select("deteccion_necesidades.*", "docente.nombre_completo", "carreras.nameCarrera")
-            ->get();
+//        $deteccionesAll = DeteccionNecesidades::with('deteccion_facilitador')->orderBy('id', 'desc')
+//            ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
+//            ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
+//            ->select("deteccion_necesidades.*", "docente.nombre_completo", "carreras.nameCarrera")
+//            ->get();
+        $deteccionesAll = DeteccionNecesidades::all();
         $carrera = Carrera::all();
         return Inertia::render('academicos/DeteccionNecesidades', [
             'deteccionesall' => $deteccionesAll,
@@ -49,7 +50,7 @@ class AcademicosController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'AsignaturasFA' => 'required',
@@ -65,7 +66,7 @@ class AcademicosController extends Controller
             'tipo' => 'required',
             'tipo_act' => 'required',
             'dirigido' => 'required',
-            'id_jefe' => 'required'
+            'id_jefe' => ''
         ]);
 
         $deteccion = DeteccionNecesidades::create([

@@ -4,6 +4,7 @@ use App\Http\Controllers\AcademicosController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\CoordinacionController;
 use App\Http\Controllers\DocentesController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,8 +23,6 @@ Route::get('/', function () {
     return Inertia::render('Inicio');
 })->name('home');
 
-Route::get('/tectuxtla-logo', [ConfigController::class, 'image']);
-Route::get('/tecnm-logo', [ConfigController::class, 'imageTecnm']);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -67,5 +66,12 @@ Route::prefix('docentes')->middleware(['auth', 'role:Docentes'])->group(function
 //    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 //    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 //});
+
+
+Route::prefix('pdf')->middleware('auth')->group(function (){
+   Route::get('/deteccion', [PDFController::class, 'deteccion_pdf']);
+});
+Route::get('/tectuxtla-logo', [ConfigController::class, 'image']);
+Route::get('/tecnm-logo', [ConfigController::class, 'imageTecnm']);
 
 require __DIR__.'/auth.php';

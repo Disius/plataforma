@@ -47,35 +47,23 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => [],
-            'email' => [],
-            'password' => [],
-            'roleUser' => [],
+            'name' => ['required'],
+            'email' => ['required'],
+            'password' => ['required'],
+            'roleUser' => ['required'],
             'id_docente' => [],
-            'departamento_id' => [],
+            'departamento_id' => ['required'],
         ]);
 
-        $docente = Docente::where('id', $request->id_docente)->first();
+        $user = User::create([
+           'name' => $request->name,
+           'email' => $request->email,
+           'password' => Hash::make($request->password),
+           'docente_id' => $request->id_docente,
+           'role' => $request->roleUser,
+           'departamento_id' => $request->departamento_id,
+        ]);
 
-        if(empty($docente)){
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'docente_id' => $request->id_docente,
-                'role' => $request->roleUser,
-                'departamento_id' => $request->departamento_id,
-            ]);
-        }else{
-            $user = User::create([
-                'name' => $docente->nombre,
-                'email' => $docente->email,
-                'password' => Hash::make($request->password),
-                'docente_id' => $request->id_docente,
-                'departamento_id' => $docente->departamento_id,
-                'role' => $request->roleUser
-            ]);
-        }
         $rol = DB::table('roles')->where('id', '=', $request->roleUser)->first();
         $user->assignRole($rol->name);
         event(new Registered($user));
