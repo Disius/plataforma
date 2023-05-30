@@ -29,252 +29,216 @@
                     <v-sheet :width="1100" >
                         <h1 class="text-center">Información personal</h1>
                         <v-divider></v-divider>
-                        <v-form @submit.prevent="submit">
-                            <v-container class="mx-auto">
-                                <v-row justify="center">
-                                    <v-col align-self="center" cols="12">
+                        <v-container>
+                            <v-row justify="center">
+                                <template v-if="props.docente != null">
+                                    <v-col cols="4">
+                                        <p>Nombre(s)</p>
+                                        {{props.docente.nombre}}
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <p>Apellido paterno</p>
+                                        {{props.docente.apellidoPat}}
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <p>Apellido materno</p>
+                                        {{props.docente.apellidoMat}}
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <p>RFC</p>
+                                        {{props.docente.rfc}}
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <p>CURP</p>
+                                        {{props.docente.curp}}
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <p>CARRERA</p>
+                                        {{props.docente.nameCarrera}}
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <p>PUESTO</p>
+                                        {{props.docente.namePuesto}}
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <p>PLAZA</p>
+                                        {{props.docente.namePlaza}}
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <p>DEPARTAMENTO ADSCRITO</p>
+                                        {{props.docente.nameDepartamento}}
+                                    </v-col>
+                                </template>
+                                <v-divider></v-divider>
+                                <v-col cols="12">
+                                    <template v-if="props.docente === null">
                                         <v-alert
                                             type="info"
                                             title="Atención"
-                                            text='Nombres como apellidos deben comenzar con MAYÚSCULAS y seguido de MINUSCULAS'
+                                            text='Si es la primera vez que te registras tendras que actualizar tu información'
                                             variant="tonal"
+                                            :model-value="alertFirstTime"
                                         ></v-alert>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>NOMBRE(S):</p>
-                                        <template v-if="docente != null">
-                                            <v-text-field
-                                                label=""
-                                                v-model="docente.nombre"
-                                            >
-                                            </v-text-field>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-text-field label="" v-model="formDocente.nombre"> </v-text-field>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>APELLIDO PATERNO:</p>
-                                        <template v-if="docente != null">
-                                            <v-text-field
-                                                label=""
-                                                v-model="docente.apellidoPat"
-                                            >
-                                            </v-text-field>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-text-field label="" v-model="formDocente.apellidoPat"> </v-text-field>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>APELLIDO MATERNO:</p>
-                                        <template v-if="docente != null">
-                                            <v-text-field
-                                                label=""
-                                                v-model="docente.apellidoMat"
-                                            >
-                                            </v-text-field>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-text-field
-                                                label=""
-                                                v-model="formDocente.apellidoMat"
-                                            >
-                                            </v-text-field>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>SEXO:</p>
-                                        <template v-if="docente != null">
-                                            <v-select v-model="docente.sexo" :items="sex" item-title="text" item-value="value">
-                                            </v-select>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-select v-model="formDocente.sexo" :items="sex" item-title="text" item-value="value">
-
-                                            </v-select>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>CURP:</p>
-                                        <template v-if="docente != null">
-                                            <v-text-field v-model="docente.curp">
-                                            </v-text-field>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-text-field v-model="formDocente.curp">
-                                            </v-text-field>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>RFC:</p>
-                                        <template v-if="docente != null">
-                                            <v-text-field v-model="docente.rfc">
-                                            </v-text-field>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-text-field v-model="formDocente.rfc">
-                                            </v-text-field>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>CORREO INSTITUCIONAL:</p>
-                                        <template v-if="docente != null">
-                                            <v-text-field v-model="docente.email">
-                                            </v-text-field>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-text-field v-model="formDocente.email">
-                                            </v-text-field>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>CARRERA QUE ATIENDE</p>
-                                        <template v-if="docente != null">
-                                            <v-select
-                                                :items="carrera"
-                                                item-title="nameCarrera"
-                                                item-value="id"
-                                                v-model="docente.carrera_id"
-                                            >
-                                            </v-select>
-                                            <v-row justify="end" class="mr-1">
-                                                <v-tooltip
-                                                    location="right"
-                                                >
-                                                    <template v-slot:activator="{ props }">
-                                                        <v-btn
-                                                            icon
-                                                            v-bind="props"
-                                                            size="small"
-                                                        >
-                                                            <v-icon color="blue-lighten-1">
-                                                                mdi-help
-                                                            </v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <span>Es la carrera en la que se tiene mas horas asginadas frente al grupo</span>
-                                                </v-tooltip>
-                                            </v-row>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-select
-                                                :items="carrera"
-                                                item-title="nameCarrera"
-                                                item-value="id"
-                                                v-model="formDocente.carrera_id"
-                                            >
-                                            </v-select>
-                                            <v-row justify="end" class="mr-1">
-                                                <v-tooltip
-                                                    location="right"
-                                                >
-                                                    <template v-slot:activator="{ props }">
-                                                        <v-btn
-                                                            icon
-                                                            v-bind="props"
-                                                            size="small"
-                                                        >
-                                                            <v-icon color="blue-lighten-1">
-                                                                mdi-help
-                                                            </v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <span>Es la carrera en la que se tiene mas horas asginadas frente al grupo</span>
-                                                </v-tooltip>
-                                            </v-row>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>DEPARTAMENTO AL QUE PERTENECE:</p>
-                                        <template v-if="docente != null">
-                                            <v-select
-                                                :items="departamento"
-                                                item-title="nameDepartamento"
-                                                item-value="id"
-                                                v-model="docente.departamento_id"
-                                            >
-                                            </v-select>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-select
-                                                :items="departamento"
-                                                item-title="nameDepartamento"
-                                                item-value="id"
-                                                v-model="formDocente.departamento_id"
-                                            >
-                                            </v-select>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>TIPO DE PLAZA:</p>
-                                        <template v-if="docente != null">
-                                            <v-select
-                                                :items="plaza"
-                                                item-title="nombre"
-                                                item-value="id"
-                                                v-model="docente.tipo_plaza"
-                                            >
-                                            </v-select>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-select
-                                                :items="plaza"
-                                                item-title="nombre"
-                                                item-value="ID"
-                                                v-model="formDocente.tipo_plaza"
-                                            >
-                                            </v-select>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>PUESTO:</p>
-                                        <template v-if="docente != null">
-                                            <v-select
-                                                :items="puesto"
-                                                item-title="nombre"
-                                                item-value="id"
-                                                v-model="docente.id_puesto"
-                                            >
-                                            </v-select>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-select
-                                                :items="puesto"
-                                                item-title="nombre"
-                                                item-value="id"
-                                                v-model="formDocente.id_puesto"
-                                            >
-                                            </v-select>
-                                        </template>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <p>Telefono fijo:</p>
-                                        <template v-if="docente != null">
-                                            <v-text-field v-model="docente.telefono">
-                                            </v-text-field>
-                                        </template>
-                                        <template v-if="docente === null">
-                                            <v-text-field v-model="formDocente.telefono">
-                                            </v-text-field>
-                                        </template>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
-                            <v-divider></v-divider>
-                            <v-container class="mx-auto">
-                                <v-row align="end" justify="end">
-                                    <v-col cols="2">
-                                        <v-btn
-                                            color="light-blue-darken-1"
-                                            type="submit"
-                                        >
-                                            ACTUALIZAR
+                                    </template>
+                                </v-col>
+                                <v-col cols="12">
+                                        <v-btn block prepend-icon="mdi-pencil" color="light-blue-darken-1" @click="edit = true">
+                                            Editar Información
                                         </v-btn>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
-                        </v-form>
+                                </v-col>
+                            <template v-if="edit === true">
+                                <v-form @submit.prevent="submit">
+                                    <v-container class="mx-auto">
+                                        <v-row justify="center">
+                                            <v-col align-self="center" cols="12">
+                                                <v-alert
+                                                    type="info"
+                                                    title="Atención"
+                                                    text='Nombres como apellidos deben comenzar con MAYÚSCULAS y seguido de MINUSCULAS'
+                                                    variant="tonal"
+                                                    :model-value="alert"
+                                                ></v-alert>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>NOMBRE(S):</p>
+                                                <v-text-field label="" v-model="formDocente.nombre"> </v-text-field>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>APELLIDO PATERNO:</p>
+                                                <v-text-field label="" v-model="formDocente.apellidoPat"> </v-text-field>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>APELLIDO MATERNO:</p>
+                                                <v-text-field
+                                                    label=""
+                                                    v-model="formDocente.apellidoMat"
+                                                >
+                                                </v-text-field>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>SEXO:</p>
+                                                <v-select v-model="formDocente.sexo" :items="sex" item-title="text" item-value="value">
+
+                                                </v-select>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>CURP:</p>
+                                                <v-text-field v-model="formDocente.curp" >
+
+                                                </v-text-field>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>RFC:</p>
+                                                <v-text-field v-model="formDocente.rfc" >
+                                                </v-text-field>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>CORREO INSTITUCIONAL:</p>
+                                                <v-text-field v-model="formDocente.email" :disabled="!emailEdit">
+                                                </v-text-field>
+                                                <v-row justify="start" class="ml-3">
+                                                    <v-tooltip
+                                                        location="right"
+                                                    >
+                                                        <template v-slot:activator="{ props }">
+                                                            <v-btn
+                                                                icon
+                                                                v-bind="props"
+                                                                size="small"
+                                                                @click="emailEdit = true"
+                                                            >
+                                                                <v-icon color="blue-lighten-1">
+                                                                    mdi-help
+                                                                </v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                        <span>Puesto que te has registrado no es necesario actualizar tu email, pero presiona el botón si asi lo deseas</span>
+                                                    </v-tooltip>
+                                                </v-row>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>CARRERA QUE ATIENDE</p>
+                                                <v-select
+                                                    :items="props.carrera"
+                                                    item-title="nameCarrera"
+                                                    item-value="id"
+                                                    v-model="formDocente.carrera_id"
+                                                >
+                                                </v-select>
+                                                <v-row justify="end" class="mr-1">
+                                                    <v-tooltip
+                                                        location="right"
+                                                    >
+                                                        <template v-slot:activator="{ props }">
+                                                            <v-btn
+                                                                icon
+                                                                v-bind="props"
+                                                                size="small"
+                                                            >
+                                                                <v-icon color="blue-lighten-1">
+                                                                    mdi-help
+                                                                </v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                        <span>Es la carrera en la que se tiene mas horas asginadas frente al grupo</span>
+                                                    </v-tooltip>
+                                                </v-row>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>DEPARTAMENTO AL QUE PERTENECE:</p>
+                                                <v-select
+                                                    :items="props.departamento"
+                                                    item-title="nameDepartamento"
+                                                    item-value="id"
+                                                    v-model="formDocente.departamento_id"
+                                                >
+                                                </v-select>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>TIPO DE PLAZA:</p>
+                                                <v-select
+                                                    :items="props.tipo_plaza"
+                                                    item-title="nombre"
+                                                    item-value="id"
+                                                    v-model="formDocente.tipo_plaza"
+                                                >
+                                                </v-select>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>PUESTO:</p>
+                                                <v-select
+                                                    :items="props.puesto"
+                                                    item-title="nombre"
+                                                    item-value="id"
+                                                    v-model="formDocente.id_puesto"
+                                                >
+                                                </v-select>
+                                            </v-col>
+                                            <v-col cols="6">
+                                                <p>TELEFONO FIJO:</p>
+                                                <v-text-field v-model="formDocente.telefono">
+
+                                                </v-text-field>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
+                                    <v-divider></v-divider>
+                                    <v-container class="mx-auto">
+                                        <v-row align="center" justify="center">
+                                            <v-col cols="6">
+                                                <v-btn
+                                                    color="light-blue-darken-1"
+                                                    type="submit" block size="x-large" :disabled="formDocente.processing"
+                                                >
+                                                    ACTUALIZAR
+                                                </v-btn>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
+                                </v-form>
+                            </template>
+                            </v-row>
+                        </v-container>
                     </v-sheet>
                 </v-row>
             </v-container>
@@ -283,16 +247,36 @@
 </template>
 
 <script setup>
-import {computed, ref} from "vue";
-import { usePage, Link, router } from "@inertiajs/vue3";
+import {computed, onMounted, ref} from "vue";
+import {Link, useForm, usePage} from "@inertiajs/vue3";
 
+const props = defineProps({
+    puesto: null,
+    departamento: null,
+    carrera: null,
+    tipo_plaza: null,
+    docente: null
+});
+const CURPValidator = [
+    value => {
+        if (value?.length <= 18 && /^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/.test(value)) return true
+
+        return "La CURP no es correcta"
+    }
+]
+const RFCValidator = [
+    value => {
+        if (value?.length <= 13 && /^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([A-Z\d]{3})?$/.test(value)) return true
+
+        return "El RFC es incorrecto"
+    }
+]
+let emailEdit = ref(false)
+const edit = ref(false);
+let alert = ref(true)
+let alertFirstTime = ref(true)
 const user = computed(() => usePage().props.user[0]);
-const docente = computed(() => usePage().props.docente);
-const carrera = computed(() => usePage().props.carrera);
-const departamento = computed(() => usePage().props.departamento);
-const plaza = computed(() => usePage().props.tipo_plaza);
-const puesto = computed(() => usePage().props.puesto);
-const formDocente = ref({
+const formDocente = useForm({
     id: user.value.id,
     rfc: "",
     curp: "",
@@ -300,27 +284,39 @@ const formDocente = ref({
     apellidoPat: "",
     apellidoMat: "",
     sexo: null,
-    email: user.value.email,
+    email: null,
     telefono: "",
     carrera_id: null,
     id_puesto: null,
     tipo_plaza: null,
-    departamento_id: user.value.departamento_id,
-});
+    departamento_id: null,
+})
+
 
 const sex = [{value: 1, text: "M"}, {value: 2, text: "F"}]
+const tipoPlaza = computed(() => {
 
-function submit() {
-    if (docente.value === null){
-        router.post('/docentes/guardar', formDocente.value);
-    }else if(docente.value != null){
-        router.put('/docentes/guardar' + '/' + docente.value.id, docente.value);
+})
+const submit = () => {
+    edit.value = false
+
+    if(props.docente === null) {
+        return formDocente.post('/docentes/guardar')
+    }else{
+        return formDocente.put("/docentes/editar" + "/" + props.docente.id)
     }
 }
+
+onMounted(() => {
+    setTimeout(() => {
+        alert.value = false
+    }, 20000)
+    setTimeout(() => {
+        alertFirstTime.value = false
+    }, 20000)
+})
 </script>
 
 <style scoped>
-h1 {
-    margin-left: 50px;
-}
+
 </style>

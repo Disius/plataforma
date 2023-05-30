@@ -59,7 +59,7 @@ Route::prefix('docentes')->middleware(['auth', 'role:Docentes'])->group(function
 
     Route::get('/mis-datos', [DocentesController::class, 'indexMyInfo'])->name('index.docenteInfo');
     Route::post('/guardar', [DocentesController::class, 'store'])->name('store.docente');
-    Route::put('/guardar/{id}', [DocentesController::class, 'update'])->name('update.info');
+    Route::put('/editar/{id}', [DocentesController::class, 'update']);
 });
 //Route::middleware('auth')->group(function () {
 //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

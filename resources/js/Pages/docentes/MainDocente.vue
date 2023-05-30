@@ -35,6 +35,7 @@
                             class="d-flex justify-center align-center"
                             link
                             type="card"
+                            :disabled="card.disable"
                         >
                             <span class="text-h5">{{ card.name }}</span>
                         </v-card>
@@ -57,16 +58,19 @@ const cards = ref([
         flex: 6,
         name: "Cursos",
         route: "",
+        disable: true
     },
     {
         flex: 6,
         name: "Mis Cursos",
         route: "",
+        disable: true
     },
     {
         flex: 6,
         name: "Mis Datos",
         route: "/docentes/mis-datos",
+        disable: false,
     },
 ]);
 </script>

@@ -21,4 +21,8 @@ class Docente extends Model
     public function docente_inscrito(){
         return $this->belongsToMany(Curso::class, 'inscripcion', 'docente_id', 'curso_id');
     }
+
+    public function Users(){
+        return $this->belongsTo(User::class, 'docente_id');
+    }
 }

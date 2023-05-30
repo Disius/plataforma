@@ -47,11 +47,9 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required'],
             'email' => ['required'],
             'password' => ['required'],
             'roleUser' => ['required'],
-            'id_docente' => [],
             'departamento_id' => ['required'],
         ]);
 
@@ -59,7 +57,6 @@ class RegisteredUserController extends Controller
            'name' => $request->name,
            'email' => $request->email,
            'password' => Hash::make($request->password),
-           'docente_id' => $request->id_docente,
            'role' => $request->roleUser,
            'departamento_id' => $request->departamento_id,
         ]);
