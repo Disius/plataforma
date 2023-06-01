@@ -28,7 +28,16 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('desarrollo')->middleware(['auth', 'role:Coordinacion de FD y AP'])->group(function (){
+
+Route::prefix('desarrollo')->middleware(['auth', 'role:Jefe del Departamento de Desarrollo Academico|Coordinacion de FD y AP'])->group(function (){
+
+    //jefe del departamento
+    Route::get('/carreras', []);
+
+
+
+
+
     Route::get('/coordinacion/deteccion', [CoordinacionController::class, 'index'])->name('index.necesidad');
     Route::put('/coordinacion/observaciones/{id}', [CoordinacionController::class, 'update'])->name('update.observacion');
     Route::put('/coordinacion/aceptado/{id}', [CoordinacionController::class, 'store'])->name('update.aceptado');

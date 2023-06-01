@@ -18,16 +18,16 @@ class CoordinacionController extends Controller
         $necesidades = DeteccionNecesidades::with('deteccion_facilitador')
             ->orderBy('id', 'desc')
             ->where('aceptado', '=', 0)
-            ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
+//            ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
             ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
-            ->select("deteccion_necesidades.*", "docente.nombre_completo AS nombreJefe", "carreras.nameCarrera")
+            ->select("deteccion_necesidades.*", "carreras.nameCarrera")
             ->get();
         $necesidadesAceptadas = DeteccionNecesidades::with('deteccion_facilitador')
             ->orderBy('id', 'desc')
             ->where('aceptado', 1)
-            ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
+//            ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
             ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
-            ->select("deteccion_necesidades.*", "docente.nombre_completo AS nombreJefe", "carreras.nameCarrera")
+            ->select("deteccion_necesidades.*", "carreras.nameCarrera")
             ->get();
 
         return Inertia::render('desarrollo/coordinacion/Necesidades', [

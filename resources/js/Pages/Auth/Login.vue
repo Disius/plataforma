@@ -25,6 +25,18 @@
                     <v-card width="800" height="300" elevation="0" rounded >
                         <!--                    <v-card-title class="bg-blue-lighten-2"></v-card-title>-->
                         <v-card-text>
+                            <v-container>
+                                <v-row justify="center">
+                                    <template v-if="props.errors">
+                                        <v-alert
+                                            color="error"
+                                            icon="$error"
+                                            title="Error"
+                                            text="Email o Contraseña incorrecto"
+                                        ></v-alert>
+                                    </template>
+                                </v-row>
+                            </v-container>
                             <v-form fast-fail @submit.prevent="form.post('/login')">
                                 <v-row justify="center" class="mt-5">
                                     <v-col cols="6" class="mt-8">
@@ -81,7 +93,8 @@ const form = useForm({
 });
 
 const props = defineProps({
-    role: null
+    role: null,
+    errors: null,
 })
 
 

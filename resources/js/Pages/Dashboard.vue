@@ -1,5 +1,8 @@
 <template>
     <v-app>
+        <template v-if="user.role === 1">
+            <MainDesarrollo></MainDesarrollo>
+        </template>
         <template v-if="user.role === 2">
             <MainDesarrollo></MainDesarrollo>
         </template>

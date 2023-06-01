@@ -20,6 +20,4 @@ use App\Http\Controllers\AcademicosController;
     return $request->user();
 });*/
 
-Route::get('some', [CoordinacionController::class, 'existObservaciones']);
-
 
