@@ -127,48 +127,20 @@ class AcademicosController extends Controller
 
         $deteccion = DeteccionNecesidades::find($id);
 
-        if($request->input('asignaturaFA') != null){
-            $deteccion->asignaturaFA = $request->asignaturaFA;
-        }
-        if($request->input('contenidosTM') != null){
-            $deteccion->contenidosTM = $request->contenidosTM;
-        }
-        if($request->input('numeroProfesores') != null){
-            $deteccion->numeroProfesores = $request->numeroProfesores;
-        }
-        if($request->input('periodo') != null){
-            $deteccion->periodo = $request->periodo;
-        }
-        if($request->input('nombreCurso') != null){
-            $deteccion->nombreCurso = $request->nombreCurso;
-        }
-        if($request->input('fecha_I') != null){
-            $deteccion->fecha_I = $request->fecha_I;
-        }
-        if($request->input('fecha_F') != null){
-            $deteccion->fecha_F = $request->fecha_F;
-        }
-        if($request->input('hora_I') != null){
-            $deteccion->hora_I = $request->periodo;
-        }
-        if($request->input('hora_F') != null){
-            $deteccion->hora_F = $request->hora_F;
-        }
-        if($request->input('tipo_FDoAP') != null){
-            $deteccion->tipo_FDoAP = $request->tipo_FDoAP;
-        }
-        if($request->input('tipo_actividad') != null){
-            $deteccion->tipo_actividad = $request->tipo_actividad;
-        }
-        if($request->input('objetivoEvento') != null){
-            $deteccion->objetivoEvento = $request->objetivoEvento;
-        }
-        if($request->input('carrera_dirigido') != null){
-            $deteccion->carrera_dirigido = $request->carrera_dirigido;
-        }
-        if($request->input('id_jefe') != null){
-            $deteccion->id_jefe = $request->id_jefe;
-        }
+        $deteccion->asignaturaFA = $request->asignaturaFA;
+        $deteccion->contenidosTM = $request->contenidosTM;
+        $deteccion->numeroProfesores = $request->numeroProfesores;
+        $deteccion->periodo = $request->periodo;
+        $deteccion->nombreCurso = $request->nombreCurso;
+        $deteccion->fecha_I = $request->fecha_I;
+        $deteccion->fecha_F = $request->fecha_F;
+        $deteccion->hora_I = $request->periodo;
+        $deteccion->hora_F = $request->hora_F;
+        $deteccion->tipo_FDoAP = $request->tipo_FDoAP;
+        $deteccion->tipo_actividad = $request->tipo_actividad;
+        $deteccion->objetivoEvento = $request->objetivoEvento;
+        $deteccion->carrera_dirigido = $request->carrera_dirigido;
+        $deteccion->id_jefe = $request->id_jefe;
         if($request->input('facilitadores') != null){
             $deteccion->deteccion_facilitador()->sync($request->input('facilitadores', []));
         }

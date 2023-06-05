@@ -16,6 +16,15 @@
                             <v-sheet
                                 class="d-flex justify-start align-center"
                             >
+                                <span class="text-h6">Necesidades recientes</span>
+                            </v-sheet>
+                        </v-col>
+                    </v-row>
+                    <v-row justify="start">
+                        <v-col>
+                            <v-sheet
+                                class="d-flex justify-start align-center"
+                            >
                                 <span class="text-h4">Necesidades recientes</span>
                             </v-sheet>
                         </v-col>
@@ -96,8 +105,16 @@
             </template>
 
             <template v-if="deteccionesaceptadas.length > 0">
-                <v-card class="text-center text-h4 mt-2 pt-2" elevation="0">Todos los registros</v-card>
                 <v-container class="mt-2 pt-2">
+                    <v-row justify="start">
+                        <v-col>
+                            <v-sheet
+                                class="d-flex justify-start align-center"
+                            >
+                                <span class="text-h6">Todos los registros</span>
+                            </v-sheet>
+                        </v-col>
+                    </v-row>
                     <v-row justify="center">
                         <v-card elevation="8">
                             <v-table fixed-header height="500px" hover>
@@ -523,6 +540,8 @@ const formCurso = useForm({
     duracion: null,
     observaciones: "",
     tipo_actividad: null,
+    aceptado: null,
+    periodo: null,
 });
 const form = ref(null);
 // functions
@@ -554,6 +573,9 @@ function submitAceptado(){
     formCurso.observaciones = itemSelected.value.observaciones;
     formCurso.tipo_actividad = itemSelected.value.tipo_actividad;
     formCurso.periodo = itemSelected.value.periodo;
+    formCurso.aceptado = 1
+
+    formCurso.post('/desarrollo/coordinacion/guardado' + '/' + itemSelected.value.id)
 
 }
 // function aceptadoSubmit() {

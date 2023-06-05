@@ -172,7 +172,7 @@
                             <v-row justify="center">
                                 <v-btn color="blue-lighten-1" type="submit" :disabled="!valid" block
                                        @click="!validate" prepend-icon="mdi-content-save-check-outline"
-                                       size="x-large" rounded style="position: relative">
+                                       size="x-large" rounded style="position: relative" @nuevaDeteccion="nuevaD = true">
                                     Guardar
                                 </v-btn>
                             </v-row>
@@ -197,6 +197,7 @@ const props = defineProps({
     departamento: null,
     docente: null,
 });
+const nuevaD = ref(false);
 const form = ref();
 const modalidad = [
     {text: "Virtual", value:1},
@@ -261,8 +262,7 @@ function reset(){
 
 const submit = () => {
     formN.post('/academicos/save-deteccion')
-    reset()
-    dialog.value = true
+
 }
 const carreraFilter = computed(() => {
     // let filtro = carrera.value.filter(carer => {

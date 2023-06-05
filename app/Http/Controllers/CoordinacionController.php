@@ -104,13 +104,6 @@ class CoordinacionController extends Controller
         //
     }
 
-    public function existObservaciones(DeteccionNecesidades $detecciones)
-    {
-        return response()->json([
-            'response' => $detecciones->isDirty()
-        ]);
-
-    }
 
     public function indexCursos(){
         $cursos = DB::table('cursos')
@@ -122,7 +115,14 @@ class CoordinacionController extends Controller
         ]);
     }
 
-    public function storeCursos(Request $request){
+    public function storeCursos(Request $request, $id){
+
+        $detecciones = DeteccionNecesidades::find($id);
+
+        $detecciones->aceptado = $request->aceptado;
+
+        $detecciones->save();
+        $request->except(['aceptado']);
 
         $curso = Curso::create($request->all());
 
