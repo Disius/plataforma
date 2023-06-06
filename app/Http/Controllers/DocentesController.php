@@ -100,42 +100,18 @@ class DocentesController extends Controller
         }
         $deteccion = Docente::find($id);
 
-        if($request->rfc != null){
-            $deteccion->rfc = $request->rfc;
-        }
-        if($request->curp != null){
-            $deteccion->curp = $request->curp;
-        }
-        if($request->nombre != null){
-            $deteccion->nombre = $request->nombre;
-        }
-        if($request->apellidoPat != null){
-            $deteccion->apellidoPat = $request->apellidoPat;
-        }
-        if($request->apellidoMat != null){
-            $deteccion->apellidoMat = $request->apellidoMat;
-        }
-        if($request->sexo != null){
-            $deteccion->sexo = $request->sexo;
-        }
-        if($request->telefono != null){
-            $deteccion->telefono = $request->telefono;
-        }
-        if($request->carrera_id != null){
-            $deteccion->carrera_id = $request->carrera_id;
-        }
-        if($request->id_puesto != null){
-            $deteccion->id_puesto = $request->id_puesto;
-        }
-        if($request->tipo_plaza != null){
-            $deteccion->tipo_plaza = $request->tipo_plaza;
-        }
-        if($request->departamento_id != null){
-            $deteccion->departamento_id = $request->departamento_id;
-        }
-        if($request->user_id != null){
-            $deteccion->user_id = $request->user_id;
-        }
+        $deteccion->rfc = $request->rfc;
+        $deteccion->curp = $request->curp;
+        $deteccion->nombre = $request->nombre;
+        $deteccion->apellidoPat = $request->apellidoPat;
+        $deteccion->apellidoMat = $request->apellidoMat;
+        $deteccion->sexo = $request->sexo;
+        $deteccion->telefono = $request->telefono;
+        $deteccion->carrera_id = $request->carrera_id;
+        $deteccion->id_puesto = $request->id_puesto;
+        $deteccion->tipo_plaza = $request->tipo_plaza;
+        $deteccion->departamento_id = $request->departamento_id;
+        $deteccion->user_id = $request->user_id;
 
         $deteccion->save();
 

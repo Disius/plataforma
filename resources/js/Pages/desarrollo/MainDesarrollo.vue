@@ -58,8 +58,8 @@ const cards = ref([
     {
         flex: 6,
         name: "Cursos",
-        route: "",
-        disable: true
+        route: "/desarrollo/coordinacion/cursos",
+        disable: false,
     },
     {
         flex: 6,

@@ -11,7 +11,7 @@ class Docente extends Model
     protected $table = 'docente';
 
     protected $fillable = [ 'rfc', 'curp', 'nombre', 'apellidoPat', 'apellidoMat',
-        'sexo', 'email', 'clave_departamento', 'telefono', 'interno', 'carrera_id', 'user_id'
+        'sexo', 'email', 'departamento_id', 'telefono', 'interno', 'carrera_id', 'user_id', 'id_puesto', 'tipo_plaza'
     ];
 
     public function facilitador_has_deteccion(){
