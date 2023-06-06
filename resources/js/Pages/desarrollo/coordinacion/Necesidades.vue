@@ -11,15 +11,7 @@
         <v-main>
             <template v-if="detection.length > 0">
                 <v-container class="mt-2 pt-2">
-                    <v-row justify="start">
-                        <v-col>
-                            <v-sheet
-                                class="d-flex justify-start align-center"
-                            >
-                                <span class="text-h6">Necesidades recientes</span>
-                            </v-sheet>
-                        </v-col>
-                    </v-row>
+
                     <v-row justify="start">
                         <v-col>
                             <v-sheet
@@ -103,8 +95,12 @@
                     </v-row>
                 </v-container>
             </template>
-
-            <template v-if="deteccionesaceptadas.length > 0">
+            <v-col cols="12">
+                <v-btn block prepend-icon="mdi-folder" color="light-blue-darken-1" @click="allRegistros = !allRegistros">
+                    Ver todos los registros
+                </v-btn>
+            </v-col>
+            <template v-if="detectionAceptadas > 0 && allRegistros === true">
                 <v-container class="mt-2 pt-2">
                     <v-row justify="start">
                         <v-col>
@@ -139,7 +135,7 @@
                                 </thead>
                                 <tbody>
                                 <tr
-                                    v-for="deteccion in deteccionesaceptadas"
+                                    v-for="deteccion in detectionAceptadas"
                                     @click="getRow(deteccion)"
                                     :key="deteccion.id"
                                     :class="{
@@ -520,10 +516,13 @@ import axios from "axios";
 
 //variables
 let detection = computed(() => usePage().props.detection);
+let detectionAceptadas = computed(() => {
+    console.log(detection)
+})
 const user = computed(() => usePage().props.user[0]);
 let itemSelected = ref({});
-let deteccionesaceptadas = computed(() => usePage().props.deteccionesAceptadas);
 let dialog = ref(false);
+const allRegistros = ref(false);
 const formO = useForm({
     observaciones: "",
 });

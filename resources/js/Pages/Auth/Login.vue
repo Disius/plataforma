@@ -25,21 +25,8 @@
                     <v-card width="800" height="900" elevation="0" rounded >
                         <!--                    <v-card-title class="bg-blue-lighten-2"></v-card-title>-->
                         <v-card-text>
-
-                            <template v-for="error in errors" :key="error">
-                                <v-row justify="center">
-                                    <v-col cols="12">
-                                        <v-alert
-                                            color="error"
-                                            icon="$error"
-                                            title="Error"
-                                            v-model="timeErrors"
-                                        >
-                                            {{error}}
-
-                                        </v-alert>
-                                    </v-col>
-                                </v-row>
+                            <template v-if="emptyErrors">
+                                <Alert :messegue="errors"/>
                             </template>
                             <v-form fast-fail @submit.prevent="form.post('/login')">
                                 <v-row justify="center" class="mt-5">
@@ -88,22 +75,22 @@
 import {useForm, Link, usePage} from "@inertiajs/vue3";
 import {computed, onMounted, ref} from "vue";
 import MainNav from "../navigation/MainNav.vue";
+import Alert from "../alerts/Alert.vue";
 
 const props = defineProps({
     role: null,
-})
-let timeErrors = ref(true);
+});
 const form = useForm({
     email: null,
     password: null,
 });
-const errors = computed(() => usePage().props.errors)
+const errors = computed(() =>  usePage().props.errors)
 
-onMounted(() => {
-    setTimeout(() => {
-        timeErrors.value = false
-    }, 10000)
-})
+const emptyErrors = computed(() => {
+    return Object.values(errors.value).length !== 0;
+
+});
+console.log(emptyErrors.value)
 </script>
 
 <style scoped>
