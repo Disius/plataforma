@@ -20,12 +20,19 @@ class AcademicosController extends Controller
     {
         $deteccionesAll = DeteccionNecesidades::with('deteccion_facilitador')->orderBy('id', 'desc')
             ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
+            ->where('deteccion_necesidades.aceptado', '=', 0)
+            ->select("deteccion_necesidades.*", "carreras.nameCarrera")
+            ->get();
+        $deteccionesAceptadas = DeteccionNecesidades::with('deteccion_facilitador')->orderBy('id', 'desc')
+            ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
+            ->where('deteccion_necesidades.aceptado', '=', 1)
             ->select("deteccion_necesidades.*", "carreras.nameCarrera")
             ->get();
         $carrera = Carrera::all();
         return Inertia::render('academicos/DeteccionNecesidades', [
             'deteccionesall' => $deteccionesAll,
-            'carer' => $carrera
+            'carer' => $carrera,
+            'deteccionesAceptadas' => $deteccionesAceptadas
         ]);
     }
 

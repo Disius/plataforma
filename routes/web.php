@@ -63,7 +63,7 @@ Route::prefix('academicos')->middleware(['auth', 'role:Jefes Academicos'])->grou
 
 
 
-Route::prefix('docentes')->middleware(['auth', 'role:Docentes'])->group(function (){
+Route::prefix('docentes')->middleware(['auth', 'role:Jefe del Departamento de Desarrollo Academico|Coordinacion de FD y AP|Docentes|Jefes Academicos'])->group(function (){
     Route::get('/cursos', [DocentesController::class, 'index'])->name('index.docente');
 
     Route::get('/mis-datos', [DocentesController::class, 'indexMyInfo'])->name('index.docenteInfo');

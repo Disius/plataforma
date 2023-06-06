@@ -50,8 +50,25 @@
                      </v-col>
                  </v-row>
              </v-container>
-             <template v-if="detection.length > 0">
-                 <v-container class="pt-4 mt-4">
+             <v-container fluid class="pa-0">
+                 <v-row justify="center">
+                     <v-col cols="5">
+                         <Link href="/academicos/crear-deteccion" as="card" type="card">
+                             <v-card
+                                 elevation="8"
+                                 height="300px"
+                                 class="d-flex justify-center align-center"
+                                 link
+                                 type="card"
+                             >
+                                 <span class="text-h4 text-center">Crear Deteccion de Necesidades</span>
+                             </v-card>
+                         </Link>
+                     </v-col>
+                 </v-row>
+             </v-container>
+             <template v-if="props.deteccionesall.length > 0">
+                 <v-container>
                      <v-row justify="start">
                         <v-col>
                             <v-sheet
@@ -61,8 +78,10 @@
                             </v-sheet>
                         </v-col>
                      </v-row>
-                     <v-row justify="start">
-                         <v-col cols="7">
+                  </v-container>
+                 <v-container>
+                     <v-row justify="center">
+                         <v-col cols="12">
                              <v-card elevation="7">
                                  <v-table
                                      fixed-header
@@ -95,7 +114,7 @@
                                      </thead>
                                      <tbody>
                                      <tr
-                                         v-for="deteccion in detection" @click="getRow(deteccion)"
+                                         v-for="deteccion in props.deteccionesall" @click="getRow(deteccion)"
                                          :key="deteccion.id" :class="{ itemSelected: deteccion === itemSelected }"
 
                                      >
@@ -117,28 +136,18 @@
                                  </v-table>
                              </v-card>
                          </v-col>
-                         <v-col cols="5">
-                             <Link href="/academicos/crear-deteccion" as="card" type="card">
-                                 <v-card
-                                     elevation="8"
-                                     height="300px"
-                                     class="d-flex justify-center align-center"
-                                     link
-                                     type="card"
-                                 >
-                                     <span class="text-h4 text-center">Crear Deteccion de Necesidades</span>
-                                 </v-card>
-                             </Link>
-                         </v-col>
                      </v-row>
                  </v-container>
              </template>
-
-
-             <template v-if="deteccionesSI.length > 0">
-                 <v-container class="pt-4 mt-4">
+             <v-col cols="12">
+                 <v-btn block prepend-icon="mdi-folder" color="light-blue-darken-1" @click="allRegistros = !allRegistros">
+                     Ver todos los registros
+                 </v-btn>
+             </v-col>
+             <template v-if="props.deteccionesAceptadas.length > 0 && allRegistros === true">
+                 <v-container class="pt-4 mt-4 pb-12">
                      <v-row justify="center">
-                         <v-card elevation="8">
+                         <v-card >
                              <v-table
                                  fixed-header
                                  height="300px"
@@ -165,8 +174,9 @@
                                  </thead>
                                  <tbody>
                                  <tr
-                                     v-for="deteccionsi in deteccionesSI"
-                                     :key="deteccionsi.id"
+                                     v-for="deteccionsi in props.deteccionesAceptadas"
+                                     :key="deteccionsi.id" @click="getRow(deteccionsi)"
+                                 :class="{ itemSelected: deteccionsi === itemSelected }"
 
                                  >
                                      <td class="v-card--hover">{{deteccionsi.nameCarrera}}</td>
@@ -350,12 +360,15 @@
 import {computed, onMounted, ref} from "vue";
 import {Link, router, usePage} from "@inertiajs/vue3";
 // props
-defineProps({
-    carer: Array
+const props = defineProps({
+    carer: Array,
+    deteccionesall: null,
+    deteccionesAceptadas: null,
 })
 // Variables
 const dialog = ref(false);
 let dialogPDF = ref(false);
+const allRegistros = ref(false);
 let itemSelected = ref({});
 const menu = ref([
     {
@@ -377,22 +390,13 @@ const formatDate = computed(() => {
 })
 // Computed propierties
 const user = computed(() => usePage().props.user[0]);
-const detection = computed(() => {
-    return usePage().props.deteccionesall.filter(need => {
-        return need.aceptado === 0 && need.id_jefe === user.value.docente_id
-    })
-});
+
 const observaciones = computed(() => {
     let data = usePage().props.deteccionesall.filter(value => {
         return value.obs
     });
 
     return data.length !== 0;
-});
-const deteccionesSI = computed(() => {
-    return usePage().props.deteccionesall.filter(need => {
-        return need.aceptado === 1 && need.id_jefe === user.value.docente_id
-    })
 });
 
 const dateFormat = computed(() => {

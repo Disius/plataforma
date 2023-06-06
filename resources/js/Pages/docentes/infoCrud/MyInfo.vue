@@ -160,14 +160,16 @@
                                                                 icon
                                                                 v-bind="props"
                                                                 size="small"
-                                                                @click="emailEdit = true"
+                                                                @click=""
                                                             >
                                                                 <v-icon color="blue-lighten-1">
                                                                     mdi-help
                                                                 </v-icon>
                                                             </v-btn>
                                                         </template>
-                                                        <span>Puesto que te has registrado no es necesario actualizar tu email, pero presiona el botón si asi lo deseas</span>
+                                                        <template v-if="user.role === 1 || user.role === 2 || user.role === 3">
+                                                            <span>Tu correo institucional pertenece a una jefatura o coordinación</span>
+                                                        </template>
                                                     </v-tooltip>
                                                 </v-row>
                                             </v-col>
@@ -231,7 +233,7 @@
                                             </v-col>
                                             <v-col cols="6">
                                                 <p>TELEFONO FIJO:</p>
-                                                <v-text-field v-model="formDocente.telefono">
+                                                <v-text-field v-model="formDocente.telefono" maxlength="12">
 
                                                 </v-text-field>
                                             </v-col>
@@ -382,7 +384,7 @@
                                                 </v-col>
                                                 <v-col cols="6">
                                                     <p>TELEFONO FIJO:</p>
-                                                    <v-text-field v-model="props.docente.telefono">
+                                                    <v-text-field v-model="props.docente.telefono" maxlength="10">
 
                                                     </v-text-field>
                                                 </v-col>
@@ -437,6 +439,7 @@ const RFCValidator = [
         return "El RFC es incorrecto"
     }
 ]
+ //const counter = [value => value.length <= 10 || 'Max 10 characters']
 let emailEdit = ref(false);
 const edit = ref(false);
 const nuevo = ref(false);

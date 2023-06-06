@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Models\DeteccionNecesidades;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,12 +13,17 @@ class FODAPNotifications extends Notification
 {
     use Queueable;
 
+
+
     /**
      * Create a new notification instance.
+     * @param DeteccionNecesidades $necesidades
+     * @param User $user
      */
-    public function __construct()
+    public function __construct(DeteccionNecesidades $necesidades, User $user)
     {
-        //
+        $this->necesidades = $necesidades;
+        $this->user = $user;
     }
 
     /**
@@ -26,7 +33,7 @@ class FODAPNotifications extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -48,7 +55,8 @@ class FODAPNotifications extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'user' =>  $this->user,
+            'deteccion' => $this->necesidades
         ];
     }
 }

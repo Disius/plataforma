@@ -12,16 +12,16 @@
             >
             </v-img>
             <v-app-bar-title class="text-h5">{{user.email}}</v-app-bar-title>
-            <Link as="button" type="button" href="/logout" method="post">
-                <v-btn icon="mdi-logout" type="button" size="x-large">
-                </v-btn>
-            </Link>
             <v-img class="d-flex justify-end  mt-10"
                    width="200"
                    heigth="400"
                    src="http://plataforma-docente.test/storage/tecnm.jpg"
             >
             </v-img>
+            <Link as="button" type="button" href="/logout" method="post">
+                <v-btn icon="mdi-logout" type="button" size="x-large">
+                </v-btn>
+            </Link>
         </v-app-bar>
         <v-main>
             <v-container class="mt-5 pt-5">
@@ -69,6 +69,12 @@ const cards = ref([
         name: "Docentes",
         route: "/academicos/docentes",
     },
+    {
+        flex: 6,
+        name: "Mis Datos",
+        route: "/docentes/mis-datos",
+        disable: false,
+    }
 ]);
 </script>
 
