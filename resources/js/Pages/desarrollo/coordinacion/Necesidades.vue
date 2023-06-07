@@ -561,6 +561,17 @@ function submitObservaciones() {
 }
 
 function submitAceptado(){
+
+    formCurso.post('/desarrollo/coordinacion/guardado' + '/' + itemSelected.value.id)
+
+}
+
+
+function reset() {
+    form.value.reset();
+}
+
+onMounted(() => {
     formCurso.nameCurso = itemSelected.value.nombreCurso;
     formCurso.tipo_curso = itemSelected.value.tipo_FDoAP;
     formCurso.objetivo = itemSelected.value.objetivoEvento;
@@ -573,23 +584,6 @@ function submitAceptado(){
     formCurso.tipo_actividad = itemSelected.value.tipo_actividad;
     formCurso.periodo = itemSelected.value.periodo;
     formCurso.aceptado = 1
-
-    formCurso.post('/desarrollo/coordinacion/guardado' + '/' + itemSelected.value.id)
-
-}
-// function aceptadoSubmit() {
-//     formO.value.aceptado = 1;
-//     router.put(
-//         "/desarrollo/coordinacion/aceptado" + "/" + itemSelected.value.id,
-//         formO.value
-//     );
-// }
-
-function reset() {
-    form.value.reset();
-}
-
-onMounted(() => {
 });
 </script>
 

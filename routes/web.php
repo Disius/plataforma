@@ -3,6 +3,7 @@
 use App\Http\Controllers\AcademicosController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\CoordinacionController;
+use App\Http\Controllers\DesarrolloController;
 use App\Http\Controllers\DocentesController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
@@ -31,9 +32,8 @@ Route::get('/dashboard', function () {
 
 Route::prefix('desarrollo')->middleware(['auth', 'role:Jefe del Departamento de Desarrollo Academico|Coordinacion de FD y AP'])->group(function (){
 
-    //jefe del departamento
-    Route::get('/carreras', []);
 
+    Route::get('/parametros', [DesarrolloController::class, 'parametros'])->middleware(['auth', 'role:Jefe del Departamento de Desarrollo Academico']);
 
 
 
@@ -57,7 +57,7 @@ Route::prefix('academicos')->middleware(['auth', 'role:Jefes Academicos'])->grou
     Route::post('/save-deteccion', [AcademicosController::class, 'store'])->name('storage.necesity');
     Route::get('/edit-deteccion/{id}', [AcademicosController::class, 'edit'])->name('edit.necesity');
     Route::put('/edited-deteccion/{id}', [AcademicosController::class, 'update'])->name('update.necesity');
-
+    Route::get('/detecciones/todas', [AcademicosController::class, 'show']);
     Route::get('/cursos', [AcademicosController::class, 'cursoIndex']);
 });
 

@@ -67,7 +67,6 @@
                      </v-col>
                  </v-row>
              </v-container>
-             <template v-if="props.deteccionesall.length > 0">
                  <v-container>
                      <v-row justify="start">
                         <v-col>
@@ -114,7 +113,7 @@
                                      </thead>
                                      <tbody>
                                      <tr
-                                         v-for="deteccion in props.deteccionesall" @click="getRow(deteccion)"
+                                         v-for="deteccion in props.detecciones" @click="getRow(deteccion)"
                                          :key="deteccion.id" :class="{ itemSelected: deteccion === itemSelected }"
 
                                      >
@@ -138,221 +137,169 @@
                          </v-col>
                      </v-row>
                  </v-container>
-             </template>
              <v-col cols="12">
-                 <v-btn block prepend-icon="mdi-folder" color="light-blue-darken-1" @click="allRegistros = !allRegistros">
-                     Ver todos los registros
-                 </v-btn>
+                 <Link href="/academicos/detecciones/todas">
+                     <v-btn block prepend-icon="mdi-folder" color="light-blue-darken-1">
+                         Ver todos los registros
+                     </v-btn>
+                 </Link>
              </v-col>
-             <template v-if="props.deteccionesAceptadas.length > 0 && allRegistros === true">
-                 <v-container class="pt-4 mt-4 pb-12">
-                     <v-row justify="center">
-                         <v-card >
-                             <v-table
-                                 fixed-header
-                                 height="300px"
-                                 hover
-                             >
-                                 <thead>
-                                 <tr>
-                                     <th class="text-left">
-                                         Dirigido
-                                     </th>
-                                     <th class="text-left">
-                                         Nombre del curso
-                                     </th>
-                                     <th class="text-left">
-                                         Contenido tematicos
-                                     </th>
-                                     <th class="text-left">
-                                         Periodo de Realización
-                                     </th>
-                                     <th class="text-left">
-                                         Objetivo de la actividad o evento
-                                     </th>
-                                 </tr>
-                                 </thead>
-                                 <tbody>
-                                 <tr
-                                     v-for="deteccionsi in props.deteccionesAceptadas"
-                                     :key="deteccionsi.id" @click="getRow(deteccionsi)"
-                                 :class="{ itemSelected: deteccionsi === itemSelected }"
+         </v-main>
+         <v-dialog v-model="dialog" fullscreen
+                   :scrim="false"
+                   transition="dialog-bottom-transition">
+             <v-card>
+                 <v-toolbar
+                     dark
+                     color="blue-grey-lighten-3"
 
-                                 >
-                                     <td class="v-card--hover">{{deteccionsi.nameCarrera}}</td>
-                                     <td class="v-card--hover">{{deteccionsi.nombreCurso}}</td>
-                                     <td class="v-card--hover">{{deteccionsi.contenidosTM}}</td>
-                                     <template v-if="deteccionsi.periodo === 1">
-                                         <td class="v-card--hover">ENERO-JUNIO</td>
+                 >
+                     <v-btn
+                         icon
+                         dark
+                         @click="dialog = false"
+                         size="x-large"
+                     >
+                         <v-icon>mdi-close</v-icon>
+                     </v-btn>
+                     <v-spacer></v-spacer>
+
+
+                 </v-toolbar>
+                 <v-container class="mx-auto">
+                     <v-row justify="center">
+                         <v-card-title class="text-center text-h4">
+                             {{itemSelected.nombreCurso}}
+                         </v-card-title>
+                         <v-spacer></v-spacer>
+                         <v-card-text>
+                             <v-container class="pt-4 mt-4">
+                                 <v-row align="center" justify="center">
+                                     <v-col cols="12">
+                                         <h3 class="">Asignaturas en la que se requiere formación o actualización.</h3>
+                                         <p class="mt-4 text-h5">{{itemSelected.asignaturaFA}}</p>
+                                     </v-col>
+                                     <v-col cols="12">
+                                         <h3>Contenidos temáticos en que se requiere la formación o actualización.</h3>
+                                         <p class="mt-4 text-h6">{{itemSelected.contenidosTM}}</p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Número de profesores(as) que la requieren.</h4>
+                                         <p class="text-center text-h6">{{itemSelected.numeroProfesores}}</p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Periodo en el que se requiere la formación o actualización (enero-junio o agosto diciembre)</h4>
+                                         <p class="text-center text-h6">
+                                             <template v-if="itemSelected.periodo === 1">
+                                                 ENERO-JUNIO
+                                             </template>
+                                             <template v-if="itemSelected.periodo === 2  ">
+                                                 AGOSTO-DICIEMBRE
+                                             </template>
+                                         </p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Asignaturas en la que se requiere formación o actualización.</h4>
+                                         <p class="text-center text-h6">{{itemSelected.nameCarrera}}</p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Facilitador(es)</h4>
+                                         <v-card class="">
+                                             <template v-for="facilitador in itemSelected.deteccion_facilitador">
+                                                 <p class="text-h6">{{ facilitador.nombre_completo }}</p>
+                                             </template>
+                                         </v-card>
+                                     </v-col>
+                                 </v-row>
+                                 <v-row justify="center" class="mt-2">
+                                     <v-col cols="6">
+                                         <h4>Nombre del curso, taller, conferencias, etc.</h4>
+                                         <p class="text-center text-h6">
+                                             <template v-if="itemSelected.periodo === 1">
+                                                 TALLER
+                                             </template>
+                                             <template v-if="itemSelected.periodo === 2">
+                                                 CURSO
+                                             </template>
+                                             <template v-if="itemSelected.periodo === 3">
+                                                 CURSO-TALLER
+                                             </template>
+                                             <template v-if="itemSelected.periodo === 4">
+                                                 FORO
+                                             </template>
+                                             <template v-if="itemSelected.periodo === 5">
+                                                 SEMINARIO
+                                             </template>
+                                         </p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Tipo de solicitud</h4>
+                                         <p class="text-center text-h6">
+                                             <template v-if="itemSelected.periodo === 1">
+                                                 FORMACIÓN DOCENTE
+                                             </template>
+                                             <template v-if="itemSelected.periodo === 2">
+                                                 ACTUALIZACIÓN PROFESIONAL
+                                             </template>
+                                         </p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Fecha en que se realizará la actividad o evento: </h4>
+                                         <p class="text-center text-h6">
+                                             {{dateFormat}}
+                                         </p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Fecha en que concluira la actividad o evento: </h4>
+                                         <p class="text-center text-h6">
+                                             {{formatDate}}
+                                         </p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Hora de inicio: </h4>
+                                         <p class="text-center text-h6" >
+                                             {{itemSelected.hora_I}}
+                                         </p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Hora de finalización: </h4>
+                                         <p class="text-center text-h6">
+                                             {{itemSelected.hora_F}}
+                                         </p>
+                                     </v-col>
+
+                                     <v-col cols="12" class="mt-4">
+                                         <h4>Objetivo de la actividad o evento.</h4>
+                                         <p class="text-h6" >
+                                             {{itemSelected.objetivoEvento}}
+                                         </p>
+                                     </v-col>
+                                     <template v-if="itemSelected.obs === 1">
+                                         <v-col cols="12" class="mt-4">
+                                             <h4 class="ml-0 pl-0">Objetivo de la actividad o evento.</h4>
+                                             <p class="text-h6 text-center">
+                                                 {{itemSelected.observaciones}}
+                                             </p>
+                                         </v-col>
                                      </template>
-                                     <template v-if="deteccionsi.periodo === 2">
-                                         <td class="v-card--hover">AGOSTO-DICIEMBRE</td>
-                                     </template>
-                                     <td class="v-card--hover">{{deteccionsi.objetivoEvento}}</td>
-                                 </tr>
-                                 </tbody>
-                             </v-table>
-                         </v-card>
+                                 </v-row>
+                             </v-container>
+                         </v-card-text>
                      </v-row>
                  </v-container>
-             </template>
-
-             <v-dialog v-model="dialog" fullscreen
-                       :scrim="false"
-                       transition="dialog-bottom-transition">
-                 <v-card>
-                     <v-toolbar
-                         dark
-                         color="blue-grey-lighten-3"
-
-                     >
-                         <v-btn
-                             icon
-                             dark
-                             @click="dialog = false"
-                             size="x-large"
-                         >
-                             <v-icon>mdi-close</v-icon>
-                         </v-btn>
-                         <v-spacer></v-spacer>
-
-
-                     </v-toolbar>
-                     <v-container class="mx-auto">
-                         <v-row justify="center">
-                                 <v-card-title class="text-center text-h4">
-                                     {{itemSelected.nombreCurso}}
-                                 </v-card-title>
-                                 <v-spacer></v-spacer>
-                                 <v-card-text>
-                                     <v-container class="pt-4 mt-4">
-                                         <v-row align="center" justify="center">
-                                             <v-col cols="12">
-                                                 <h3 class="">Asignaturas en la que se requiere formación o actualización.</h3>
-                                                 <p class="mt-4 text-h5">{{itemSelected.asignaturaFA}}</p>
-                                             </v-col>
-                                             <v-col cols="12">
-                                                 <h3>Contenidos temáticos en que se requiere la formación o actualización.</h3>
-                                                 <p class="mt-4 text-h6">{{itemSelected.contenidosTM}}</p>
-                                             </v-col>
-                                             <v-col cols="6">
-                                                 <h4>Número de profesores(as) que la requieren.</h4>
-                                                 <p class="text-center text-h6">{{itemSelected.numeroProfesores}}</p>
-                                             </v-col>
-                                             <v-col cols="6">
-                                                 <h4>Periodo en el que se requiere la formación o actualización (enero-junio o agosto diciembre)</h4>
-                                                 <p class="text-center text-h6">
-                                                     <template v-if="itemSelected.periodo === 1">
-                                                         ENERO-JUNIO
-                                                     </template>
-                                                     <template v-if="itemSelected.periodo === 2  ">
-                                                         AGOSTO-DICIEMBRE
-                                                     </template>
-                                                 </p>
-                                             </v-col>
-                                             <v-col cols="6">
-                                                 <h4>Asignaturas en la que se requiere formación o actualización.</h4>
-                                                 <p class="text-center text-h6">{{itemSelected.nameCarrera}}</p>
-                                             </v-col>
-                                             <v-col cols="6">
-                                                 <h4>Facilitador(es)</h4>
-                                                 <v-card class="">
-                                                     <template v-for="facilitador in itemSelected.deteccion_facilitador">
-                                                         <p class="text-h6">{{ facilitador.nombre_completo }}</p>
-                                                     </template>
-                                                 </v-card>
-                                             </v-col>
-                                         </v-row>
-                                         <v-row justify="center" class="mt-2">
-                                             <v-col cols="6">
-                                                 <h4>Nombre del curso, taller, conferencias, etc.</h4>
-                                                 <p class="text-center text-h6">
-                                                     <template v-if="itemSelected.periodo === 1">
-                                                         TALLER
-                                                     </template>
-                                                     <template v-if="itemSelected.periodo === 2">
-                                                         CURSO
-                                                     </template>
-                                                     <template v-if="itemSelected.periodo === 3">
-                                                         CURSO-TALLER
-                                                     </template>
-                                                     <template v-if="itemSelected.periodo === 4">
-                                                         FORO
-                                                     </template>
-                                                     <template v-if="itemSelected.periodo === 5">
-                                                         SEMINARIO
-                                                     </template>
-                                                 </p>
-                                             </v-col>
-                                             <v-col cols="6">
-                                                 <h4>Tipo de solicitud</h4>
-                                                 <p class="text-center text-h6">
-                                                     <template v-if="itemSelected.periodo === 1">
-                                                         FORMACIÓN DOCENTE
-                                                     </template>
-                                                     <template v-if="itemSelected.periodo === 2">
-                                                         ACTUALIZACIÓN PROFESIONAL
-                                                     </template>
-                                                 </p>
-                                             </v-col>
-                                             <v-col cols="6">
-                                                 <h4>Fecha en que se realizará la actividad o evento: </h4>
-                                                 <p class="text-center text-h6">
-                                                     {{dateFormat}}
-                                                 </p>
-                                             </v-col>
-                                             <v-col cols="6">
-                                                 <h4>Fecha en que concluira la actividad o evento: </h4>
-                                                 <p class="text-center text-h6">
-                                                     {{formatDate}}
-                                                 </p>
-                                             </v-col>
-                                             <v-col cols="6">
-                                                 <h4>Hora de inicio: </h4>
-                                                 <p class="text-center text-h6" >
-                                                     {{itemSelected.hora_I}}
-                                                 </p>
-                                             </v-col>
-                                             <v-col cols="6">
-                                                 <h4>Hora de finalización: </h4>
-                                                 <p class="text-center text-h6">
-                                                     {{itemSelected.hora_F}}
-                                                 </p>
-                                             </v-col>
-
-                                             <v-col cols="12" class="mt-4">
-                                                 <h4>Objetivo de la actividad o evento.</h4>
-                                                 <p class="text-h6" >
-                                                     {{itemSelected.objetivoEvento}}
-                                                 </p>
-                                             </v-col>
-                                             <template v-if="itemSelected.obs === 1">
-                                                 <v-col cols="12" class="mt-4">
-                                                     <h4 class="ml-0 pl-0">Objetivo de la actividad o evento.</h4>
-                                                     <p class="text-h6 text-center">
-                                                         {{itemSelected.observaciones}}
-                                                     </p>
-                                                 </v-col>
-                                             </template>
-                                         </v-row>
-                                     </v-container>
-                                 </v-card-text>
-                         </v-row>
-                     </v-container>
-                     <v-card-actions>
-                             <v-row justify="end">
-                                 <v-col cols="3" class="mr-8">
-                                     <Link :href="'/academicos/edit-deteccion' + '/' + itemSelected.id" as="v-btn" type="v-btn">
-                                         <v-btn size="x-large" block color="#5865f2" rounded elevation="7">
-                                             Editar
-                                         </v-btn>
-                                     </Link>
-                                 </v-col>
-                             </v-row>
-                     </v-card-actions>
-                 </v-card>
-             </v-dialog>
-         </v-main>
+                 <v-card-actions>
+                     <v-row justify="end">
+                         <v-col cols="3" class="mr-8">
+                             <Link :href="'/academicos/edit-deteccion' + '/' + itemSelected.id" as="v-btn" type="v-btn">
+                                 <v-btn size="x-large" block color="#5865f2" rounded elevation="7">
+                                     Editar
+                                 </v-btn>
+                             </Link>
+                         </v-col>
+                     </v-row>
+                 </v-card-actions>
+             </v-card>
+         </v-dialog>
      </v-layout>
 </template>
 
@@ -362,13 +309,11 @@ import {Link, router, usePage} from "@inertiajs/vue3";
 // props
 const props = defineProps({
     carer: Array,
-    deteccionesall: null,
-    deteccionesAceptadas: null,
+    detecciones: Array,
 })
 // Variables
 const dialog = ref(false);
 let dialogPDF = ref(false);
-const allRegistros = ref(false);
 let itemSelected = ref({});
 const menu = ref([
     {
@@ -392,7 +337,7 @@ const formatDate = computed(() => {
 const user = computed(() => usePage().props.user[0]);
 
 const observaciones = computed(() => {
-    let data = usePage().props.deteccionesall.filter(value => {
+    let data = usePage().props.detecciones.filter(value => {
         return value.obs
     });
 

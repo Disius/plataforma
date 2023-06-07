@@ -18,21 +18,14 @@ class AcademicosController extends Controller
      */
     public function index()
     {
-        $deteccionesAll = DeteccionNecesidades::with('deteccion_facilitador')->orderBy('id', 'desc')
-            ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
-            ->where('deteccion_necesidades.aceptado', '=', 0)
-            ->select("deteccion_necesidades.*", "carreras.nameCarrera")
-            ->get();
-        $deteccionesAceptadas = DeteccionNecesidades::with('deteccion_facilitador')->orderBy('id', 'desc')
-            ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
-            ->where('deteccion_necesidades.aceptado', '=', 1)
-            ->select("deteccion_necesidades.*", "carreras.nameCarrera")
-            ->get();
+        $relation = auth()->user()->departamento_id;
+        $detecciones = DeteccionNecesidades::join('carreras', 'carreras.id', '=', 'carrera_dirigido')
+        ->where('aceptado', 0)->get();
+
         $carrera = Carrera::all();
         return Inertia::render('academicos/DeteccionNecesidades', [
-            'deteccionesall' => $deteccionesAll,
+            'detecciones' => $detecciones,
             'carer' => $carrera,
-            'deteccionesAceptadas' => $deteccionesAceptadas
         ]);
     }
 
@@ -45,7 +38,7 @@ class AcademicosController extends Controller
         $docentes = Docente::select('nombre_completo', 'id')->get();
         $carrera = Carrera::select('nameCarrera', 'id', 'departamento_id')->get();
         $departamento = Departamento::all();
-        return Inertia::render('academicos/deteccionCRUD/DeteccionForm', [
+        return Inertia::render('academicos/operaciones_deteccion/DeteccionForm', [
             'carrera' => $carrera,
             'docentes' => $docentes,
             'departamento' => $departamento
@@ -104,9 +97,12 @@ class AcademicosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
-        //
+        $detecciones = DeteccionNecesidades::where('aceptado', 1)->orderBy('id', 'desc')->get();
+        return Inertia::render('academicos/operaciones_deteccion/AllRegistros', [
+            'detecciones' => $detecciones
+        ]);
     }
 
     /**
@@ -118,7 +114,7 @@ class AcademicosController extends Controller
         $deteccionID = DeteccionNecesidades::find($id);
 
         $relationDocente = $deteccionID->deteccion_facilitador;
-        return Inertia::render('academicos/deteccionCRUD/EditNecesidad', [
+        return Inertia::render('academicos/operaciones_deteccion/EditNecesidad', [
             'deteccionSelect' => $deteccionID,
             'carrera' => $carrera,
             'relation' => $relationDocente,
@@ -189,4 +185,6 @@ class AcademicosController extends Controller
             'docentesBase' => $docentesBase,
         ]);
     }
+
+
 }

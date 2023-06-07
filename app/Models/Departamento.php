@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Departamento extends Model
 {
@@ -37,9 +38,11 @@ class Departamento extends Model
 
     ];
 
-    /*public function manyDocentes(){
-        return $this->belongsTo('App\Models\Docente', 'departamento_id', 'id_departamento');
-    }*/
+    public function carerras(): HasMany
+    {
+        return $this->hasMany(Carrera::class);
+    }
 
     public $timestamps = false;
+
 }

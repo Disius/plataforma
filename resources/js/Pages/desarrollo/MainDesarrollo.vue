@@ -27,18 +27,33 @@
                 <v-row justify="center" class="">
                     <v-col v-for="card in cards" :key="card.id" :cols="card.flex">
                         <Link :href="card.route" as="card" type="card">
-                            <v-card
+                                <v-card
                                 elevation="8"
-                                height="200px"
+                                height="300px"
                                 class="d-flex justify-center align-center"
                                 link
                                 type="card"
                                 :disabled="card.disable"
-                            >
-                                <span class="text-h5">{{ card.name }}</span>
-                            </v-card>
+                                >
+                                    <span class="text-h5">{{ card.name }}</span>
+                                </v-card>
                         </Link>
                     </v-col>
+                    <template v-if="user.role === 1">
+                        <v-col cols="6">
+                            <Link href="/desarrollo/parametros" as="card" type="card">
+                                <v-card
+                                    elevation="8"
+                                    height="300px"
+                                    class="d-flex justify-center align-center"
+                                    link
+                                    type="card"
+                                >
+                                    <span class="text-h5">Parametros</span>
+                                </v-card>
+                            </Link>
+                        </v-col>
+                    </template>
                 </v-row>
             </v-container>
         </v-main>
@@ -65,7 +80,7 @@ const cards = ref([
         flex: 6,
         name: "Deteccion de Necesidades",
         route: "/desarrollo/coordinacion/deteccion",
-        disable: false
+        disable: false,
     },
     {
         flex: 6,
