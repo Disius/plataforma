@@ -6,6 +6,7 @@
     const props = defineProps({
         user: Array,
         carreras: Array,
+        departamento: Array,
     })
 </script>
 
@@ -26,9 +27,9 @@
 
         </v-app-bar>
         <v-main>
-            <v-container>
+            <v-container fluid>
                 <v-row justify="center">
-                    <Carrera :carrera="carreras"/>
+                    <Carrera :carrera="carreras" :departamento="departamento"/>
                 </v-row>
             </v-container>
         </v-main>

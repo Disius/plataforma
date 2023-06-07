@@ -33,8 +33,8 @@ Route::get('/dashboard', function () {
 Route::prefix('desarrollo')->middleware(['auth', 'role:Jefe del Departamento de Desarrollo Academico|Coordinacion de FD y AP'])->group(function (){
 
 
-    Route::get('/parametros', [DesarrolloController::class, 'parametros'])->middleware(['auth', 'role:Jefe del Departamento de Desarrollo Academico']);
-
+    Route::get('/parametros', [DesarrolloController::class, 'parametros'])->middleware(['auth', 'role:Jefe del Departamento de Desarrollo Academico'])->name('parametros');
+    Route::put('/carrera-editada/{id}', [DesarrolloController::class, 'update'])->middleware(['auth', 'role:Jefe del Departamento de Desarrollo Academico']);
 
 
 
