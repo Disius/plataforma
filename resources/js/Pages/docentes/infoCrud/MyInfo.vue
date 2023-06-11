@@ -1,27 +1,44 @@
 <template>
     <v-layout>
-        <v-app-bar
-            extended
-            color="blue-grey-lighten-3"
-            absolute
-        >
-            <v-img class="d-flex justify-center align-center mt-10"
-                   width="200"
-                   heigth="200"
-                   src="http://plataforma-docente.test/storage/Tec-Tuxtla_Logo.png"
-            >
-            </v-img>
-            <Link as="button" type="button" href="/dashboard">
-                <v-btn icon="mdi-arrow-left" type="button" size="x-large">
-                </v-btn>
-            </Link>
-            <v-app-bar-title class="text-h5">{{user.email}}</v-app-bar-title>
-            <v-img class="d-flex justify-end  mt-10 mr-4"
-                   width="200"
-                   heigth="400"
-                   src="http://plataforma-docente.test/storage/tecnm.jpg"
-            >
-            </v-img>
+        <v-navigation-drawer v-model="drawer" color="light-blue-darken-4">
+            <v-list>
+                <v-list-item
+
+                >
+                                    {{props.user[0].email}}
+                </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list color="transparent">
+                <Link href="/dashboard" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
+                </Link>
+
+                <Link href="/academicos/cursos" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
+                </Link>
+                <Link href="/academicos/detecciones" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
+                </Link>
+
+                <Link href="/docentes/mis-datos" as="v-list-item">
+                     <v-list-item link prepend-icon="" title="Mi información"></v-list-item>
+                </Link>
+            </v-list>
+
+            <template v-slot:append>
+                <div class="pa-2">
+                    <Link href="/logout" as="v-btn" method="post">
+                        <v-btn block color="light-blue-darken-1">
+                            Logout
+                        </v-btn>
+                    </Link>
+                </div>
+            </template>
+        </v-navigation-drawer>
+        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-app-bar class="">
+            <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
         </v-app-bar>
         <v-main>
             <v-container class="mx-auto">
@@ -417,14 +434,17 @@
 <script setup>
 import {computed, onMounted, ref} from "vue";
 import {Link, useForm, usePage} from "@inertiajs/vue3";
+import NavD from "../../AuthHeader/Nav.vue";
 
 const props = defineProps({
     puesto: null,
     departamento: null,
     carrera: null,
     tipo_plaza: null,
-    docente: null
+    docente: null,
+    user: Array,
 });
+const drawer = ref(true);
 const CURPValidator = [
     value => {
         if (value?.length <= 18 && /^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/.test(value)) return true

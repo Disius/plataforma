@@ -61,7 +61,6 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import { ref } from "vue";
-import MainNav from "./navigation/MainNav.vue";
 
 const length = ref(3);
 const window = ref(0);

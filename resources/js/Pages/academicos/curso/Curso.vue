@@ -1,12 +1,69 @@
+<script setup>
+import {computed, ref} from "vue";
+import {usePage, Link} from "@inertiajs/vue3";
+
+const props = defineProps({
+    user: Array,
+});
+const drawer = ref(true);
+const user = computed(() => usePage().props.user[0]);
+let itemSelected = ref({});
+let cursos = computed(() => usePage().props.cursos);
+const dialog = ref(false);
+
+const form = ref();
+const dateFormat = computed(() => {
+    return new Date(itemSelected.value.fecha_I).toLocaleDateString("es-MX");
+});
+const formatDate = computed(() => {
+    return new Date(itemSelected.value.fecha_F).toLocaleDateString("es-MX");
+});
+function getRow(item) {
+    itemSelected.value = item;
+    dialog.value = true;
+}
+</script>
 <template>
     <v-layout>
-        <v-app-bar color="blue-grey-lighten-3" style="position: fixed">
-            <Link href="/dashboard" type="button" as="button">
-                <v-btn type="button" size="x-large" icon="mdi-arrow-left">
+        <v-navigation-drawer v-model="drawer" color="light-blue-darken-4">
+            <v-list>
+                <v-list-item
 
-                </v-btn>
-            </Link>
-            <v-app-bar-title class="text-h4 text-center">Cursos</v-app-bar-title>
+                >
+                    {{props.user[0].email}}
+                </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list color="transparent">
+                <Link href="/dashboard" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
+                </Link>
+
+                <Link href="/academicos/cursos" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
+                </Link>
+                <Link href="/academicos/detecciones" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
+                </Link>
+
+                <Link href="/docentes/mis-datos" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Mi información"></v-list-item>
+                </Link>
+            </v-list>
+
+            <template v-slot:append>
+                <div class="pa-2">
+                    <Link href="/logout" as="v-btn" method="post">
+                        <v-btn block color="light-blue-darken-1">
+                            Logout
+                        </v-btn>
+                    </Link>
+                </div>
+            </template>
+        </v-navigation-drawer>
+        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-app-bar class="">
+            <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
         </v-app-bar>
         <v-main>
             <v-container class="mt-7 pt-7">
@@ -36,17 +93,17 @@
                                 }"
                             >
                                 <td class="v-card--hover">
-                                    {{ curso.nameCurso }}
+                                    {{ curso.nombreCurso }}
                                 </td>
                                 <td class="v-card--hover">
-                                    {{ curso.nombreCarrera }}
+                                    {{ curso.carrera.nameCarrera }}
                                 </td>
-                                <template v-if="curso.tipo_curso === 1">
+                                <template v-if="curso.tipo_FDoAP === 1">
                                     <td class="v-card--hover">
                                         FORMACIÓN DOCENTE
                                     </td>
                                 </template>
-                                <template v-if="curso.tipo_curso === 2">
+                                <template v-if="curso.tipo_FDoAP === 2">
                                     <td class="v-card--hover">
                                         ACTUALIZACIÓN PROFESIONAL
                                     </td>
@@ -60,7 +117,7 @@
                                     </td>
                                 </template>
                                 <td class="v-card--hover">
-                                    {{ curso.objetivo }}
+                                    {{ curso.objetivoEvento }}
                                 </td>
                             </tr>
                             </tbody>
@@ -290,28 +347,6 @@
         </v-main>
     </v-layout>
 </template>
-
-<script setup>
-import {computed, ref} from "vue";
-import {usePage, Link} from "@inertiajs/vue3";
-
-const user = computed(() => usePage().props.user[0]);
-let itemSelected = ref({});
-let cursos = computed(() => usePage().props.cursos);
-const dialog = ref(false);
-
-const form = ref();
-const dateFormat = computed(() => {
-    return new Date(itemSelected.value.fecha_I).toLocaleDateString("es-MX");
-});
-const formatDate = computed(() => {
-    return new Date(itemSelected.value.fecha_F).toLocaleDateString("es-MX");
-});
-function getRow(item) {
-    itemSelected.value = item;
-    dialog.value = true;
-}
-</script>
 
 <style scoped>
 

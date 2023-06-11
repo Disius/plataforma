@@ -18,9 +18,9 @@ class AcademicosController extends Controller
      */
     public function index()
     {
-        $relation = auth()->user()->departamento_id;
-        $detecciones = DeteccionNecesidades::join('carreras', 'carreras.id', '=', 'carrera_dirigido')
-        ->where('aceptado', 0)->get();
+
+        $detecciones = DeteccionNecesidades::with(['carrera', 'deteccion_facilitador'])
+        ->where('aceptado', '=', 0)->where('id_jefe', auth()->user()->docente_id)->get();
 
         $carrera = Carrera::all();
         return Inertia::render('academicos/DeteccionNecesidades', [
@@ -36,7 +36,7 @@ class AcademicosController extends Controller
     public function create(): \Inertia\Response
     {
         $docentes = Docente::select('nombre_completo', 'id')->get();
-        $carrera = Carrera::select('nameCarrera', 'id', 'departamento_id')->get();
+        $carrera = Carrera::where('departamento_id', auth()->user()->departamento_id)->select('nameCarrera', 'id', 'departamento_id')->get();
         $departamento = Departamento::all();
         return Inertia::render('academicos/operaciones_deteccion/DeteccionForm', [
             'carrera' => $carrera,
@@ -64,8 +64,9 @@ class AcademicosController extends Controller
             'tipo' => 'required',
             'tipo_act' => 'required',
             'dirigido' => 'required',
-            'id_jefe' => '',
-            'modalidad' => ['required']
+            'id_jefe' => 'required',
+            'modalidad' => ['required'],
+            'facilitador_externo' => ['required']
         ]);
 
         $deteccion = DeteccionNecesidades::create([
@@ -84,7 +85,8 @@ class AcademicosController extends Controller
             'carrera_dirigido' => $request->dirigido,
             'id_jefe' => $request->id_jefe,
             'aceptado' => 0,
-            'modalidad' => $request->modalida,
+            'modalidad' => $request->modalidad,
+            'facilitador_externo' =>  $request->facilitador_externo
         ]);
 
         $deteccion->save();
@@ -99,7 +101,8 @@ class AcademicosController extends Controller
      */
     public function show()
     {
-        $detecciones = DeteccionNecesidades::where('aceptado', 1)->orderBy('id', 'desc')->get();
+        $detecciones = DeteccionNecesidades::with(['carrera', 'deteccion_facilitador'])
+            ->where('aceptado', 1)->where('id_jefe', auth()->user()->docente_id)->get();
         return Inertia::render('academicos/operaciones_deteccion/AllRegistros', [
             'detecciones' => $detecciones
         ]);
@@ -144,6 +147,7 @@ class AcademicosController extends Controller
         $deteccion->objetivoEvento = $request->objetivoEvento;
         $deteccion->carrera_dirigido = $request->carrera_dirigido;
         $deteccion->id_jefe = $request->id_jefe;
+        $deteccion->modalidad = $request->modalidad;
         if($request->input('facilitadores') != null){
             $deteccion->deteccion_facilitador()->sync($request->input('facilitadores', []));
         }
@@ -162,10 +166,9 @@ class AcademicosController extends Controller
     }
 
     public function cursoIndex(){
-        $cursos = DB::table('cursos')
-            ->join('carreras', 'carreras.id', '=', 'cursos.dirigido')
-            ->select('cursos.*', 'carreras.nameCarrera AS nombreCarrera')
-            ->get();
+
+        $cursos = DeteccionNecesidades::with(['carrera', 'deteccion_facilitador'])->where('aceptado', '=', 1)
+            ->where('id_jefe', auth()->user()->docente_id)->get();
 
         return Inertia::render('academicos/curso/Curso', [
             'cursos' => $cursos

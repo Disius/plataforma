@@ -1,12 +1,65 @@
+<script setup>
+import {computed, ref} from "vue";
+import {usePage, Link} from "@inertiajs/vue3";
+import Nav from "../../../AuthHeader/Nav.vue";
+
+const props = defineProps({
+    user: Array,
+})
+let itemSelected = ref({});
+let cursos = computed(() => usePage().props.cursos);
+const dialog = ref(false);
+
+const form = ref();
+const dateFormat = computed(() => {
+    return new Date(itemSelected.value.fecha_I).toLocaleDateString("es-MX");
+});
+const formatDate = computed(() => {
+    return new Date(itemSelected.value.fecha_F).toLocaleDateString("es-MX");
+});
+function getRow(item) {
+    itemSelected.value = item;
+    dialog.value = true;
+}
+</script>
+
 <template>
     <v-layout>
-        <v-app-bar color="blue-grey-lighten-3" style="position: fixed">
-            <Link href="/dashboard" type="button" as="button">
-                <v-btn type="button" size="x-large" icon="mdi-arrow-left">
+        <v-navigation-drawer v-model="drawer">
+            <v-list>
+                <v-list-item
 
-                </v-btn>
-            </Link>
-            <v-app-bar-title class="text-h4 text-center">Cursos</v-app-bar-title>
+                >
+                    {{props.user[0].email}}
+                </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list color="transparent">
+                <Link href="/dashboard" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
+                </Link>
+
+                    <Link href="/desarrollo/coordinacion/cursos" as="v-list-item">
+                        <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
+                    </Link>
+                    <Link href="/desarrollo/coordinacion/deteccion" as="v-list-item">
+                        <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
+                    </Link>
+            </v-list>
+
+            <template v-slot:append>
+                <div class="pa-2">
+                    <Link href="/logout" as="v-btn" method="post">
+                        <v-btn block>
+                            Logout
+                        </v-btn>
+                    </Link>
+                </div>
+            </template>
+        </v-navigation-drawer>
+        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-app-bar class="">
+            <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
         </v-app-bar>
         <v-main>
             <v-container class="mt-4 pt-4">
@@ -291,24 +344,3 @@
     </v-layout>
 </template>
 
-<script setup>
-import {computed, ref} from "vue";
-import {usePage, Link} from "@inertiajs/vue3";
-
-const user = computed(() => usePage().props.user[0]);
-let itemSelected = ref({});
-let cursos = computed(() => usePage().props.cursos);
-const dialog = ref(false);
-
-const form = ref();
-const dateFormat = computed(() => {
-    return new Date(itemSelected.value.fecha_I).toLocaleDateString("es-MX");
-});
-const formatDate = computed(() => {
-    return new Date(itemSelected.value.fecha_F).toLocaleDateString("es-MX");
-});
-function getRow(item) {
-    itemSelected.value = item;
-    dialog.value = true;
-}
-</script>

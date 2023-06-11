@@ -59,6 +59,7 @@ Route::prefix('academicos')->middleware(['auth', 'role:Jefes Academicos'])->grou
     Route::put('/edited-deteccion/{id}', [AcademicosController::class, 'update'])->name('update.necesity');
     Route::get('/detecciones/todas', [AcademicosController::class, 'show']);
     Route::get('/cursos', [AcademicosController::class, 'cursoIndex']);
+
 });
 
 
@@ -70,11 +71,6 @@ Route::prefix('docentes')->middleware(['auth', 'role:Jefe del Departamento de De
     Route::post('/guardar', [DocentesController::class, 'store'])->name('store.docente');
     Route::put('/editar/{id}', [DocentesController::class, 'update']);
 });
-//Route::middleware('auth')->group(function () {
-//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-//});
 
 
 Route::prefix('pdf')->middleware('auth')->group(function (){

@@ -1,12 +1,124 @@
+<script setup>
+//imports
+import { router, useForm, usePage, Link } from "@inertiajs/vue3";
+import { computed, onMounted, ref } from "vue";
+import axios from "axios";
+import Nav from "../../AuthHeader/Nav.vue";
+
+
+//props
+const props = defineProps({
+    user: Array,
+})
+//variables
+let detection = computed(() => usePage().props.detection);
+let detectionAceptadas = computed(() => {
+    console.log(detection)
+})
+const drawer = ref(true);
+let itemSelected = ref({});
+let dialog = ref(false);
+const allRegistros = ref(false);
+const formO = useForm({
+    observaciones: "",
+});
+const formCurso = useForm({
+    nameCurso: "",
+    tipo_curso: null,
+    objetivo: "",
+    fecha_I: null,
+    fecha_F: null,
+    hora_I: null,
+    hora_F: null,
+    lugar: null,
+    dirigido: null,
+    duracion: null,
+    observaciones: "",
+    tipo_actividad: null,
+    aceptado: null,
+    periodo: null,
+});
+const form = ref(null);
+// functions
+function getRow(item) {
+    itemSelected.value = item;
+    dialog.value = true;
+}
+const dateFormat = computed(() => {
+    return new Date(itemSelected.value.fecha_I).toLocaleDateString("es-MX");
+});
+const formatDate = computed(() => {
+    return new Date(itemSelected.value.fecha_F).toLocaleDateString("es-MX");
+});
+
+function submitObservaciones() {
+    formO.put("/desarrollo/coordinacion/observaciones" + "/" + itemSelected.value.id)
+    reset();
+}
+
+function submitAceptado(){
+
+    formCurso.post('/desarrollo/coordinacion/guardado' + '/' + itemSelected.value.id)
+
+}
+
+
+function reset() {
+    form.value.reset();
+}
+
+onMounted(() => {
+    formCurso.nameCurso = itemSelected.value.nombreCurso;
+    formCurso.tipo_curso = itemSelected.value.tipo_FDoAP;
+    formCurso.objetivo = itemSelected.value.objetivoEvento;
+    formCurso.fecha_I = itemSelected.value.fecha_I;
+    formCurso.fecha_F = itemSelected.value.fecha_F;
+    formCurso.hora_I = itemSelected.value.hora_I;
+    formCurso.hora_F = itemSelected.value.hora_F;
+    formCurso.dirigido = itemSelected.value.carrera_dirigido;
+    formCurso.observaciones = itemSelected.value.observaciones;
+    formCurso.tipo_actividad = itemSelected.value.tipo_actividad;
+    formCurso.periodo = itemSelected.value.periodo;
+    formCurso.aceptado = 1
+});
+</script>
+
 <template>
     <v-layout>
-        <v-app-bar color="blue-grey-lighten-3" style="position: fixed">
-            <Link href="/dashboard" type="button" as="button">
-                <v-btn type="button" size="x-large" icon="mdi-arrow-left">
+        <v-navigation-drawer v-model="drawer">
+            <v-list>
+                <v-list-item
 
-                </v-btn>
-            </Link>
-            <v-app-bar-title class="text-h4 text-center">Deteccion de Necesidades</v-app-bar-title>
+                >
+                    {{props.user[0].email}}
+                </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list color="transparent">
+                <Link href="/dashboard" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
+                </Link>
+                    <Link href="/desarrollo/coordinacion/cursos" as="v-list-item">
+                        <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
+                    </Link>
+                    <Link href="/desarrollo/coordinacion/deteccion" as="v-list-item">
+                        <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
+                    </Link>
+            </v-list>
+
+            <template v-slot:append>
+                <div class="pa-2">
+                    <Link href="/logout" as="v-btn" method="post">
+                        <v-btn block>
+                            Logout
+                        </v-btn>
+                    </Link>
+                </div>
+            </template>
+        </v-navigation-drawer>
+        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-app-bar class="">
+            <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
         </v-app-bar>
         <v-main>
             <template v-if="detection.length > 0">
@@ -22,7 +134,7 @@
                         </v-col>
                     </v-row>
                     <v-row justify="center">
-                        <v-card elevation="8">
+                        <v-card elevation="8" width="1500px">
                             <v-table fixed-header height="500px" hover>
                                 <thead>
                                 <tr>
@@ -505,87 +617,6 @@
     </v-layout>
 </template>
 
-<script setup>
-//imports
-import { router, useForm, usePage, Link } from "@inertiajs/vue3";
-import { computed, onMounted, ref } from "vue";
-import axios from "axios";
-
-
-//props
-
-//variables
-let detection = computed(() => usePage().props.detection);
-let detectionAceptadas = computed(() => {
-    console.log(detection)
-})
-const user = computed(() => usePage().props.user[0]);
-let itemSelected = ref({});
-let dialog = ref(false);
-const allRegistros = ref(false);
-const formO = useForm({
-    observaciones: "",
-});
-const formCurso = useForm({
-    nameCurso: "",
-    tipo_curso: null,
-    objetivo: "",
-    fecha_I: null,
-    fecha_F: null,
-    hora_I: null,
-    hora_F: null,
-    lugar: null,
-    dirigido: null,
-    duracion: null,
-    observaciones: "",
-    tipo_actividad: null,
-    aceptado: null,
-    periodo: null,
-});
-const form = ref(null);
-// functions
-function getRow(item) {
-    itemSelected.value = item;
-    dialog.value = true;
-}
-const dateFormat = computed(() => {
-    return new Date(itemSelected.value.fecha_I).toLocaleDateString("es-MX");
-});
-const formatDate = computed(() => {
-    return new Date(itemSelected.value.fecha_F).toLocaleDateString("es-MX");
-});
-
-function submitObservaciones() {
-    formO.put("/desarrollo/coordinacion/observaciones" + "/" + itemSelected.value.id)
-    reset();
-}
-
-function submitAceptado(){
-
-    formCurso.post('/desarrollo/coordinacion/guardado' + '/' + itemSelected.value.id)
-
-}
-
-
-function reset() {
-    form.value.reset();
-}
-
-onMounted(() => {
-    formCurso.nameCurso = itemSelected.value.nombreCurso;
-    formCurso.tipo_curso = itemSelected.value.tipo_FDoAP;
-    formCurso.objetivo = itemSelected.value.objetivoEvento;
-    formCurso.fecha_I = itemSelected.value.fecha_I;
-    formCurso.fecha_F = itemSelected.value.fecha_F;
-    formCurso.hora_I = itemSelected.value.hora_I;
-    formCurso.hora_F = itemSelected.value.hora_F;
-    formCurso.dirigido = itemSelected.value.carrera_dirigido;
-    formCurso.observaciones = itemSelected.value.observaciones;
-    formCurso.tipo_actividad = itemSelected.value.tipo_actividad;
-    formCurso.periodo = itemSelected.value.periodo;
-    formCurso.aceptado = 1
-});
-</script>
 
 <style>
 . itemSelected {

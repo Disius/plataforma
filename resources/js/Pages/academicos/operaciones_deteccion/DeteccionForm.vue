@@ -1,11 +1,146 @@
+
+<script setup>
+//imports
+import {computed, onMounted, ref} from "vue";
+import {useForm} from "@inertiajs/vue3";
+import {usePage} from "@inertiajs/vue3";
+import {Link} from "@inertiajs/vue3";
+
+// Variables
+const props = defineProps({
+    carrera: null,
+    departamento: null,
+    docente: null,
+    user: Array,
+});
+const drawer = ref(true);
+const nuevaD = ref(false);
+const form = ref();
+const modalidad = [
+    {text: "Virtual", value:1},
+    {text: "Presencial", value:2},
+    {text: "Híbrido", value:3},
+]
+let valid = ref(true);
+const user = computed(() => usePage().props.user[0]);
+const carrera = computed(() => usePage().props.carrera);
+let exist = ref(null)
+const tipoSolicitud = ref([
+    {text: "FORMACIÓN DOCENTE", value:1},
+    {text: "ACTUALIZACIÓN PROFESIONAL", value:2}
+])
+const tipoCurso = ref([
+    {value:1, text:"TALLER"},
+    {value:2, text:"CURSO"},
+    {value:3, text:"CURSO-TALLER"},
+    {value:4, text:"FORO"},
+    {value:5, text:"SEMINARIO"}
+]);
+const dialog = ref(true);
+const formN = useForm({
+    AsignaturasFA: "",
+    ContenidoTFA: "",
+    Numprofesores: null,
+    periodo: null,
+    facilitadores: [],
+    nombreCT: "",
+    fecha_I: "",
+    fecha_F: "",
+    hora_I: "",
+    hora_F: "",
+    objetivo: "",
+    tipo: null,
+    tipo_act: null,
+    dirigido: null,
+    modalidad: null,
+    id_jefe: user.value.docente_id,
+    facilitador_externo: ""
+});
+const period = ref([
+    {text: "ENERO-JUNIO", value: 1},
+    {text: "AGOSTO-DICIEMBRE", value: 2},
+]);
+
+const textRules = ref([
+    (v) => !!v ||  "Este campo es requerido"
+]);
+
+const requiredRule = ref([
+    (v) => !!v || 'Este dato es requerido',
+]);
+
+
+// props
+
+//Functions
+function validate(){
+    return valid.value = this.$refs.form.validate();
+}
+function reset(){
+    form.value.reset()
+}
+
+const submit = () => {
+    formN.post('/academicos/save-deteccion')
+
+}
+const carreraFilter = computed(() => {
+    let filtro = carrera.value.filter(carer => {
+         return carer.departamento_id === user.value.departamento_id
+    });
+    const addTodas =  {nameCarrera: "TODAS LAS CARRERAS", id: 11}
+
+    filtro.push(addTodas);
+
+    return filtro;
+
+});
+
+onMounted(() => {
+
+})
+</script>
 <template>
     <v-layout>
-        <v-app-bar color="blue-grey-lighten-3" style="position: fixed">
-            <Link as="button" type="button" href="/academicos/detecciones">
-                <v-btn icon="mdi-arrow-left" type="button" size="x-large">
-                </v-btn>
-            </Link>
-            <v-app-bar-title class="text-h4 text-center">Deteccion de Necesidades</v-app-bar-title>
+        <v-navigation-drawer v-model="drawer" color="light-blue-darken-4">
+            <v-list>
+                <v-list-item
+
+                >
+                                    {{props.user[0].email}}
+                </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list color="transparent">
+                <Link href="/dashboard" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
+                </Link>
+
+                <Link href="/academicos/cursos" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
+                </Link>
+                <Link href="/academicos/detecciones" as="v-list-item">
+                    <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
+                </Link>
+
+                <Link href="/docentes/mis-datos" as="v-list-item">
+                     <v-list-item link prepend-icon="" title="Mi información"></v-list-item>
+                </Link>
+            </v-list>
+
+            <template v-slot:append>
+                <div class="pa-2">
+                    <Link href="/logout" as="v-btn" method="post">
+                        <v-btn block color="light-blue-darken-1">
+                            Logout
+                        </v-btn>
+                    </Link>
+                </div>
+            </template>
+        </v-navigation-drawer>
+        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-app-bar class="">
+            <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
         </v-app-bar>
         <v-main>
             <v-form @submit.prevent="submit" ref="form">
@@ -38,7 +173,7 @@
                 </v-dialog>
 
                 <v-row justify="center">
-                    <v-sheet :width="1500" height="500" class="mb-12 pb-9">
+                    <v-card width="1500" class="ma-12 pa-9" elevation="12">
                         <template v-if="formN.tipo != null">
                             <v-container class="mt-5">
                                 <v-row justify="center">
@@ -118,14 +253,36 @@
                                         </v-select>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-select label="Carrera a la que va dirigida" :items="props.carrera" item-title="nameCarrera" item-value="id" v-model="formN.dirigido" :rules="textRules">
+                                        <v-select label="Carrera a la que va dirigida" :items="carreraFilter" item-title="nameCarrera" item-value="id" v-model="formN.dirigido" :rules="textRules">
 
                                         </v-select>
                                     </v-col>
-                                    <v-col cols="12">
+                                    <v-col >
                                         <v-autocomplete label="Facilitadores">
 
                                         </v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="1" align-self="center">
+                                        <v-tooltip
+                                                        location="top"
+                                                    >
+                                                        <template v-slot:activator="{ props }">
+                                                            <v-btn
+                                                                icon
+                                                                v-bind="props"
+                                                                size="small"
+                                                                @click="exist = !exist"
+                                                            >
+                                                                <v-icon color="blue-lighten-1">
+                                                                    mdi-help
+                                                                </v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                            <span>Si el facilitador es una institución</span>
+                                                    </v-tooltip>
+                                    </v-col>
+                                    <v-col  align-self="center">
+                                        <v-text-field label="Faciltador" :disabled="!exist" v-model="formN.facilitador_externo"></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-text-field label="Nombre del curso, taller, conferencias, etc." v-model="formN.nombreCT" :rules="textRules">
@@ -177,109 +334,12 @@
                                 </v-btn>
                             </v-row>
                         </v-container>
-                    </v-sheet>
+                    </v-card>
                 </v-row>
             </v-form>
         </v-main>
     </v-layout>
 </template>
-
-<script setup>
-//imports
-import {computed, onMounted, ref} from "vue";
-import {useForm} from "@inertiajs/vue3";
-import {usePage} from "@inertiajs/vue3";
-import {Link} from "@inertiajs/vue3";
-
-// Variables
-const props = defineProps({
-    carrera: null,
-    departamento: null,
-    docente: null,
-});
-const nuevaD = ref(false);
-const form = ref();
-const modalidad = [
-    {text: "Virtual", value:1},
-    {text: "Presencial", value:2},
-    {text: "Híbrido", value:3},
-]
-let valid = ref(true);
-const user = computed(() => usePage().props.user[0]);
-const tipoSolicitud = ref([
-    {text: "FORMACIÓN DOCENTE", value:1},
-    {text: "ACTUALIZACIÓN PROFESIONAL", value:2}
-])
-const tipoCurso = ref([
-    {value:1, text:"TALLER"},
-    {value:2, text:"CURSO"},
-    {value:3, text:"CURSO-TALLER"},
-    {value:4, text:"FORO"},
-    {value:5, text:"SEMINARIO"}
-]);
-const dialog = ref(true);
-const formN = useForm({
-    AsignaturasFA: "",
-    ContenidoTFA: "",
-    Numprofesores: null,
-    periodo: null,
-    facilitadores: [],
-    nombreCT: "",
-    fecha_I: "",
-    fecha_F: "",
-    hora_I: "",
-    hora_F: "",
-    objetivo: "",
-    tipo: null,
-    tipo_act: null,
-    dirigido: null,
-    modalidad: null,
-    id_jefe: user.value.docente_id
-});
-const period = ref([
-    {text: "ENERO-JUNIO", value: 1},
-    {text: "AGOSTO-DICIEMBRE", value: 2},
-]);
-
-const textRules = ref([
-    (v) => !!v ||  "Este campo es requerido"
-]);
-
-const requiredRule = ref([
-    (v) => !!v || 'Este dato es requerido',
-]);
-
-
-// props
-
-//Functions
-function validate(){
-    return valid.value = this.$refs.form.validate();
-}
-function reset(){
-    form.value.reset()
-}
-
-const submit = () => {
-    formN.post('/academicos/save-deteccion')
-
-}
-const carreraFilter = computed(() => {
-    // let filtro = carrera.value.filter(carer => {
-    //      return carer.departamento_id === user.value.departamento_id
-    // });
-    // const addTodas =  {nameCarrera: "TODAS LAS CARRERAS", id: 11}
-    //
-    // filtro.push(addTodas);
-    //
-    // return filtro;
-
-});
-
-onMounted(() => {
-
-})
-</script>
 
 <style scoped>
 

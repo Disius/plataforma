@@ -1,31 +1,92 @@
+<script setup>
+import {computed, onMounted, ref} from "vue";
+import {Link, router, usePage} from "@inertiajs/vue3";
+// props
+const props = defineProps({
+    carer: Array,
+    detecciones: Array,
+    user: Array
+})
+// Variables
+const drawer = ref(true);
+const dialog = ref(false);
+let dialogPDF = ref(false);
+let itemSelected = ref({});
+const menu = ref([
+    {
+        id: 1,
+        name: "Deteccion de Necesidades",
+    },
+    {
+        id: 1,
+        name: "PIFAP",
+    },
+]);
+// functions
+function getRow(item){
+    itemSelected.value = item
+    dialog.value = true
+}
+const formatDate = computed(() => {
+    return new Date(itemSelected.value.fecha_F).toLocaleDateString('es-MX');
+})
+// Computed propierties
+const user = computed(() => usePage().props.user[0]);
+
+const observaciones = computed(() => {
+    let data = usePage().props.detecciones.filter(value => {
+        return value.obs
+    });
+
+    return data.length !== 0;
+});
+
+const dateFormat = computed(() => {
+    return new Date(itemSelected.value.fecha_I).toLocaleDateString('es-MX');
+});
+</script>
 <template>
-     <v-layout class="" style="height: 50px">
-          <v-app-bar
-              extended
-              color="blue-grey-lighten-3"
-              absolute
-          >
+     <v-layout>
+         <v-navigation-drawer v-model="drawer" color="light-blue-darken-4">
+             <v-list>
+                 <v-list-item
 
-                  <Link href="/dashboard" as="button" type="button">
-                      <v-btn icon class="ml-8" size="x-large">
-                          <v-icon icon="mdi-arrow-left" style=""></v-icon>
-                      </v-btn>
-                  </Link>
+                 >
+                     {{props.user[0].email}}
+                 </v-list-item>
+             </v-list>
+             <v-divider></v-divider>
+             <v-list color="transparent">
+                 <Link href="/dashboard" as="v-list-item">
+                     <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
+                 </Link>
 
-                <v-img class="d-flex justify-center align-center mt-10"
-                       width="100"
-                       heigth="200"
-                       src="http://plataforma-docente.test/storage/Tec-Tuxtla_Logo.png"
-                >
-                </v-img>
-                <v-app-bar-title class="text-h5 text-center">{{user.email}}</v-app-bar-title>
-                <v-img class="d-flex justify-end  mt-10 mr-4"
-                       width="200"
-                       heigth="400"
-                       src="http://plataforma-docente.test/storage/tecnm.jpg"
-                >
-                </v-img>
-            </v-app-bar>
+                 <Link href="/academicos/cursos" as="v-list-item">
+                     <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
+                 </Link>
+                 <Link href="/academicos/detecciones" as="v-list-item">
+                     <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
+                 </Link>
+
+                 <Link href="/docentes/mis-datos" as="v-list-item">
+                     <v-list-item link prepend-icon="" title="Mi información"></v-list-item>
+                 </Link>
+             </v-list>
+
+             <template v-slot:append>
+                 <div class="pa-2">
+                     <Link href="/logout" as="v-btn" method="post">
+                         <v-btn block color="light-blue-darken-1">
+                             Logout
+                         </v-btn>
+                     </Link>
+                 </div>
+             </template>
+         </v-navigation-drawer>
+         <v-app-bar-nav-icon></v-app-bar-nav-icon>
+         <v-app-bar class="">
+             <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
+         </v-app-bar>
 
          <v-main>
              <v-container class="mt-2 pt-2">
@@ -33,7 +94,7 @@
                      <v-col cols="3">
                          <v-menu>
                              <template v-slot:activator="{ props }">
-                                 <v-btn v-bind="props" size="x-large" color="blue-grey-lighten-5" block>
+                                 <v-btn v-bind="props" size="x-large" block>
                                      <v-icon>mdi-file-pdf-box</v-icon>
                                  </v-btn>
                              </template>
@@ -48,21 +109,11 @@
                              </v-list>
                          </v-menu>
                      </v-col>
-                 </v-row>
-             </v-container>
-             <v-container fluid class="pa-0">
-                 <v-row justify="center">
-                     <v-col cols="5">
-                         <Link href="/academicos/crear-deteccion" as="card" type="card">
-                             <v-card
-                                 elevation="8"
-                                 height="300px"
-                                 class="d-flex justify-center align-center"
-                                 link
-                                 type="card"
-                             >
-                                 <span class="text-h4 text-center">Crear Deteccion de Necesidades</span>
-                             </v-card>
+                     <v-col cols="9">
+                         <Link href="/academicos/crear-deteccion" as="v-btn">
+                             <v-btn block height="52px">
+                                 Crear deteccion de necesidades
+                             </v-btn>
                          </Link>
                      </v-col>
                  </v-row>
@@ -90,9 +141,6 @@
                                      <thead>
                                      <tr>
                                          <th class="text-left">
-                                             Dirigido
-                                         </th>
-                                         <th class="text-left">
                                              Nombre del curso
                                          </th>
                                          <th class="text-left">
@@ -109,6 +157,7 @@
                                                  Observaciones
                                              </th>
                                          </template>
+                                         <th>Estado</th>
                                      </tr>
                                      </thead>
                                      <tbody>
@@ -117,7 +166,7 @@
                                          :key="deteccion.id" :class="{ itemSelected: deteccion === itemSelected }"
 
                                      >
-                                         <td class="v-card--hover">{{deteccion.nameCarrera}}</td>
+
                                          <td class="v-card--hover">{{deteccion.nombreCurso}}</td>
                                          <td class="v-card--hover">{{deteccion.contenidosTM}}</td>
                                          <template v-if="deteccion.periodo === 1">
@@ -127,9 +176,7 @@
                                              <td class="v-card--hover">AGOSTO-DICIEMBRE</td>
                                          </template>
                                          <td class="v-card--hover">{{deteccion.objetivoEvento}}</td>
-                                         <template v-if="observaciones === true">
-                                             <td class="v-card--hover">{{deteccion.observaciones}}</td>
-                                         </template>
+                                    
                                      </tr>
                                      </tbody>
                                  </v-table>
@@ -138,7 +185,7 @@
                      </v-row>
                  </v-container>
              <v-col cols="12">
-                 <Link href="/academicos/detecciones/todas">
+                 <Link href="/academicos/detecciones/todas" as="v-btn">
                      <v-btn block prepend-icon="mdi-folder" color="light-blue-darken-1">
                          Ver todos los registros
                      </v-btn>
@@ -151,7 +198,7 @@
              <v-card>
                  <v-toolbar
                      dark
-                     color="blue-grey-lighten-3"
+                     color="light-blue-darken-4"
 
                  >
                      <v-btn
@@ -163,16 +210,20 @@
                          <v-icon>mdi-close</v-icon>
                      </v-btn>
                      <v-spacer></v-spacer>
-
+                     <Link :href="'/academicos/edit-deteccion' + '/' + itemSelected.id" as="v-btn" type="v-btn">
+                                 <v-btn block class="mr-16" size="x-large">
+                                     Editar
+                                 </v-btn>
+                    </Link>
 
                  </v-toolbar>
                  <v-container class="mx-auto">
                      <v-row justify="center">
-                         <v-card-title class="text-center text-h4">
-                             {{itemSelected.nombreCurso}}
-                         </v-card-title>
                          <v-spacer></v-spacer>
-                         <v-card-text>
+                         <v-card width="1700" class="pa-5 ma-5">
+                            <v-card-title class="text-center text-h4">
+                                {{itemSelected.nombreCurso}}
+                            </v-card-title>
                              <v-container class="pt-4 mt-4">
                                  <v-row align="center" justify="center">
                                      <v-col cols="12">
@@ -186,6 +237,20 @@
                                      <v-col cols="6">
                                          <h4>Número de profesores(as) que la requieren.</h4>
                                          <p class="text-center text-h6">{{itemSelected.numeroProfesores}}</p>
+                                     </v-col>
+                                     <v-col cols="6">
+                                         <h4>Modalidad.</h4>
+                                         <p class="text-center text-h6">
+                                             <template v-if="itemSelected.modalidad === 1">
+                                                 Virtual
+                                             </template>
+                                             <template v-if="itemSelected.modalidad === 2">
+                                                 Presencial
+                                             </template>
+                                             <template v-if="itemSelected.modalidad === 3">
+                                                 Hibrído
+                                             </template>
+                                         </p>
                                      </v-col>
                                      <v-col cols="6">
                                          <h4>Periodo en el que se requiere la formación o actualización (enero-junio o agosto diciembre)</h4>
@@ -202,13 +267,17 @@
                                          <h4>Asignaturas en la que se requiere formación o actualización.</h4>
                                          <p class="text-center text-h6">{{itemSelected.nameCarrera}}</p>
                                      </v-col>
-                                     <v-col cols="6">
+                                     <v-col cols="12">
                                          <h4>Facilitador(es)</h4>
                                          <v-card class="">
                                              <template v-for="facilitador in itemSelected.deteccion_facilitador">
                                                  <p class="text-h6">{{ facilitador.nombre_completo }}</p>
                                              </template>
                                          </v-card>
+                                     </v-col>
+                                     <v-col cols="12">
+                                         <h4>Facilitador externo</h4>
+                                             <p class="text-h6 ml-4">{{ itemSelected.facilitador_externo }}</p>
                                      </v-col>
                                  </v-row>
                                  <v-row justify="center" class="mt-2">
@@ -284,70 +353,13 @@
                                      </template>
                                  </v-row>
                              </v-container>
-                         </v-card-text>
+                         </v-card>
                      </v-row>
                  </v-container>
-                 <v-card-actions>
-                     <v-row justify="end">
-                         <v-col cols="3" class="mr-8">
-                             <Link :href="'/academicos/edit-deteccion' + '/' + itemSelected.id" as="v-btn" type="v-btn">
-                                 <v-btn size="x-large" block color="#5865f2" rounded elevation="7">
-                                     Editar
-                                 </v-btn>
-                             </Link>
-                         </v-col>
-                     </v-row>
-                 </v-card-actions>
              </v-card>
          </v-dialog>
      </v-layout>
 </template>
-
-<script setup>
-import {computed, onMounted, ref} from "vue";
-import {Link, router, usePage} from "@inertiajs/vue3";
-// props
-const props = defineProps({
-    carer: Array,
-    detecciones: Array,
-})
-// Variables
-const dialog = ref(false);
-let dialogPDF = ref(false);
-let itemSelected = ref({});
-const menu = ref([
-    {
-        id: 1,
-        name: "Deteccion de Necesidades",
-    },
-    {
-        id: 1,
-        name: "PIFAP",
-    },
-]);
-// functions
-function getRow(item){
-    itemSelected.value = item
-    dialog.value = true
-}
-const formatDate = computed(() => {
-    return new Date(itemSelected.value.fecha_F).toLocaleDateString('es-MX');
-})
-// Computed propierties
-const user = computed(() => usePage().props.user[0]);
-
-const observaciones = computed(() => {
-    let data = usePage().props.detecciones.filter(value => {
-        return value.obs
-    });
-
-    return data.length !== 0;
-});
-
-const dateFormat = computed(() => {
-    return new Date(itemSelected.value.fecha_I).toLocaleDateString('es-MX');
-});
-</script>
 
 <style scoped>
 .titulo {

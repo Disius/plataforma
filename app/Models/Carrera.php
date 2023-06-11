@@ -23,4 +23,8 @@ class Carrera extends Model
     {
         return $this->belongsTo(Departamento::class);
     }
+    public function deteccion(): BelongsTo
+    {
+        return $this->belongsTo(DeteccionNecesidades::class, 'carrera_dirigido', 'id');
+    }
 }

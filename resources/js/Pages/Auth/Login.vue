@@ -74,7 +74,6 @@
 <script setup>
 import {useForm, Link, usePage} from "@inertiajs/vue3";
 import {computed, onMounted, ref} from "vue";
-import MainNav from "../navigation/MainNav.vue";
 import Alert from "../alerts/Alert.vue";
 
 const props = defineProps({
