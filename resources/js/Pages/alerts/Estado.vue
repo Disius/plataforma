@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 
 
 
@@ -7,6 +8,7 @@
 
 
 
+const type = ref("");
 
 const props = defineProps({
     estadoDeteccion: Array
@@ -15,7 +17,7 @@ const props = defineProps({
 
 <template>
         <v-alert
-        type="error"
+        
         >
             
         </v-alert>

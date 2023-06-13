@@ -76,13 +76,12 @@ const dateFormat = computed(() => {
                      </v-row>
                   </v-container>
                  <v-container>
-                     <v-row justify="center">
-                         <v-col cols="9">
+                     <v-row justify="start">
+                         <v-col cols="11">
                                  <v-table
                                      fixed-header
                                      height="400px"
                                      hover
-                                     
                                  >
                                      <thead>
                                      <tr>
@@ -122,7 +121,22 @@ const dateFormat = computed(() => {
                                          <td class="v-card--hover">{{deteccion.objetivoEvento}}</td>
                                             <td>{{ deteccion.observaciones }}</td>
                                          <td class="ma-4 pa-4">
-                                            <Estado :estadoDeteccion="props.detecciones"/>
+                                            <!-- <Estado :estadoDeteccion="props.detecciones"/> -->
+                                            <template v-if="deteccion.obs === 1">
+                                                <v-alert
+                                                type="warning"
+                                                
+                                                >
+                                                    <p>Observaciones</p>
+                                                </v-alert>
+                                            </template>
+                                            <template v-else>
+                                                <v-alert
+                                                    type="info"
+                                                    >
+                                                        <p>Sin revisar</p>
+                                                    </v-alert>
+                                            </template>
                                          </td>
                                      </tr>
                                      </tbody>

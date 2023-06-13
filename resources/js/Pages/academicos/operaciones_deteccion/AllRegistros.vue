@@ -49,11 +49,9 @@ function getRow(item){
                             <th class="text-left">
                                 Objetivo de la actividad o evento
                             </th>
-                            <template v-if="observaciones === true">
-                                <th class="text-left">
+                            <th class="text-left">
                                     Observaciones
-                                </th>
-                            </template>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -72,6 +70,9 @@ function getRow(item){
                                 <td class="v-card--hover">AGOSTO-DICIEMBRE</td>
                             </template>
                             <td class="v-card--hover">{{deteccion.objetivoEvento}}</td>
+                            <template v-if="deteccion.obs === 1">
+                                <td>{{ deteccion.observaciones }}</td>
+                            </template>
                         </tr>
                         </tbody>
                     </v-table>
