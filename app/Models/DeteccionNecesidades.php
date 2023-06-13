@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DeteccionNecesidades extends Model
 {
@@ -49,5 +52,9 @@ class DeteccionNecesidades extends Model
         return $this->hasOne(Carrera::class, 'id', 'carrera_dirigido');
     }
 
+    public function jefe(): BelongsTo
+    {
+        return $this->belongsTo(Docente::class, 'id_jefe');
+    }
     
 }

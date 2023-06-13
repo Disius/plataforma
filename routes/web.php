@@ -40,10 +40,10 @@ Route::prefix('desarrollo')->middleware(['auth', 'role:Jefe del Departamento de 
 
     Route::get('/coordinacion/deteccion', [CoordinacionController::class, 'index'])->name('index.necesidad');
     Route::put('/coordinacion/observaciones/{id}', [CoordinacionController::class, 'update'])->name('update.observacion');
-//    Route::put('/coordinacion/aceptado/{id}', [CoordinacionController::class, 'store'])->name('update.aceptado');
+    Route::get('/coordinacion/registros', [CoordinacionController::class, 'allRegistros'])->name('todos.registros');
 
     Route::get('/coordinacion/cursos', [CoordinacionController::class, 'indexCursos']);
-    Route::post('/coordinacion/guardado/{id}', [CoordinacionController::class, 'storeCursos']);
+    Route::post('/coordinacion/guardado/{id}', [CoordinacionController::class, 'store']);
 });
 
 

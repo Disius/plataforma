@@ -1,30 +1,14 @@
 <script setup>
-//imports
-import { router, useForm, usePage, Link } from "@inertiajs/vue3";
-import { computed, onMounted, ref } from "vue";
-import DesarrolloHeader from "../header/DesarrolloHeader.vue";
-
-
-//props
+import DesarrolloHeader from '../header/DesarrolloHeader.vue';
+import {ref, computed} from "vue"
 const props = defineProps({
     user: Array,
     detection: Array,
-})
-//variables
+});
+
 let itemSelected = ref({});
 let dialog = ref(false);
-const formO = useForm({
-    observaciones: "",
-});
-const Form = useForm({
-    aceptado: Number,
-});
-const form = ref(null);
-// functions
-function getRow(item) {
-    itemSelected.value = item;
-    dialog.value = true;
-}
+
 const dateFormat = computed(() => {
     return new Date(itemSelected.value.fecha_I).toLocaleDateString("es-MX");
 });
@@ -32,42 +16,18 @@ const formatDate = computed(() => {
     return new Date(itemSelected.value.fecha_F).toLocaleDateString("es-MX");
 });
 
-function submitObservaciones() {
-    formO.put("/desarrollo/coordinacion/observaciones" + "/" + itemSelected.value.id)
-    reset();
+function getRow(item) {
+    itemSelected.value = item;
+    dialog.value = true;
 }
-
-function submitAceptado(){
-
-    Form.post('/desarrollo/coordinacion/guardado' + '/' + itemSelected.value.id)
-
-}
-
-
-function reset() {
-    form.value.reset();
-}
-
-onMounted(() => {
-    Form.aceptado = 1
-});
-</script>
-
+</script> 
 <template>
     <v-layout>
         <DesarrolloHeader :usuario="props.user"/>
         <v-main>
-            <v-container class="mt-2 pt-2">
-
-                <v-row justify="center" class="mt-4">
-                            <v-sheet
-                                class="d-flex justify-start align-center"
-                            >
-                                <span class="text-h4">Necesidades recientes</span>
-                            </v-sheet>
-                </v-row>
-                <v-row justify="center" class="mt-7 pt-7">
-                        <v-card elevation="8" width="1500px">
+            <v-container class="mt-8 pt-9">
+                    <v-row justify="center">
+                        <v-card elevation="8" width="1500">
                             <v-table fixed-header height="500px" hover>
                                 <thead>
                                 <tr>
@@ -98,10 +58,10 @@ onMounted(() => {
                                 }"
                                 >
                                     <td class="v-card--hover">
-                                        {{ deteccion.jefe.nombre }} {{ deteccion.jefe.apellidoPat }} {{ deteccion.jefe.apellidoMat }}
+                                        {{ deteccion.nombreJefe }}
                                     </td>
                                     <td class="v-card--hover">
-                                        {{ deteccion.carrera.nameCarrera }}
+                                        {{ deteccion.nameCarrera }}
                                     </td>
                                     <template v-if="deteccion.tipo_FDoAP === 1">
                                         <td class="v-card--hover">
@@ -137,17 +97,10 @@ onMounted(() => {
                                 </tbody>
                             </v-table>
                         </v-card>
-                </v-row>
-            </v-container>
-            <Link href="/desarrollo/coordinacion/registros" as="v-btn" type="v-btn">
-                <v-col cols="12" class="mt-12 pt-12">
-                    <v-btn block prepend-icon="mdi-folder" color="light-blue-darken-1">
-                        Ver todos los registros
-                    </v-btn>
-                </v-col>
-            </Link>
-            <!--        Dialog-->
-            <v-dialog
+                    </v-row>
+                </v-container>
+
+                <v-dialog
                 v-model="dialog"
                 fullscreen
                 :scrim="false"
@@ -186,7 +139,12 @@ onMounted(() => {
                     </v-toolbar>
                     <v-container class="mt-16">
                         <v-row justify="center">
-                            
+                            <v-sheet
+                                :height="970"
+                                :width="3000"
+                                :elevation="8"
+                                class="mt-3 pt-4"
+                            >
                                 <v-card-title class="text-center text-h5">
                                     {{ itemSelected.nombreCurso }}
                                 </v-card-title>
@@ -202,7 +160,7 @@ onMounted(() => {
                                                 </h4>
                                                 <p
                                                     class="text-center"
-                                                    elevation="0"
+                                                    
                                                 >{{
                                                         itemSelected.asignaturaFA
                                                     }}</p
@@ -216,7 +174,7 @@ onMounted(() => {
                                                 </h4>
                                                 <p
                                                     class="text-center"
-                                                    elevation="0"
+                                                    
                                                 >{{
                                                         itemSelected.contenidosTM
                                                     }}</p
@@ -229,7 +187,7 @@ onMounted(() => {
                                                 </h4>
                                                 <p
                                                     class="text-center text-h6"
-                                                    elevation="0"
+                                                    
                                                 >{{
                                                         itemSelected.numeroProfesores
                                                     }}</p
@@ -243,7 +201,7 @@ onMounted(() => {
                                                 </h4>
                                                 <p
                                                     class="text-center text-h6"
-                                                    elevation="0"
+                                                    
                                                 >
                                                     <template
                                                         v-if="
@@ -271,7 +229,7 @@ onMounted(() => {
                                                 </h4>
                                                 <p
                                                     class="text-center text-h6"
-                                                    elevation="0"
+                                                    
                                                 >{{
                                                         itemSelected.nameCarrera
                                                     }}</p
@@ -279,15 +237,15 @@ onMounted(() => {
                                             </v-col>
                                             <v-col cols="6">
                                                 <h4>Facilitador(es)</h4>
-                                                <p class="" elevation="0">
+                                                <v-card class="" >
                                                     <template
                                                         v-for="facilitador in itemSelected.deteccion_facilitador"
                                                     >
-                                                        <v-card class="text-h6">{{
+                                                        <p class="text-h6">{{
                                                                 facilitador.nombre_completo
-                                                            }}</v-card>
+                                                            }}</p>
                                                     </template>
-                                                </p>
+                                                </v-card>
                                             </v-col>
                                         </v-row>
                                         <v-row justify="center" class="mt-2">
@@ -298,7 +256,7 @@ onMounted(() => {
                                                 </h4>
                                                 <p
                                                     class="text-center text-h6"
-                                                    elevation="0"
+                                                    
                                                 >
                                                     <template
                                                         v-if="
@@ -346,7 +304,7 @@ onMounted(() => {
                                                 <h4>Tipo de solicitud</h4>
                                                 <p
                                                     class="text-center text-h6"
-                                                    elevation="0"
+                                                    
                                                 >
                                                     <template
                                                         v-if="
@@ -371,7 +329,7 @@ onMounted(() => {
                                                     Fecha en que se realizará la
                                                     actividad o evento:
                                                 </h4>
-                                                <p
+                            <p
                                                     class="text-center text-h6"
                                                     elevation="0"
                                                 >
@@ -383,7 +341,7 @@ onMounted(() => {
                                                     Fecha en que concluira la
                                                     actividad o evento:
                                                 </h4>
-                                                <p
+                            <p
                                                     class="text-center text-h6"
                                                     elevation="0"
                                                 >
@@ -392,7 +350,7 @@ onMounted(() => {
                                             </v-col>
                                             <v-col cols="6">
                                                 <h4>Hora de inicio:</h4>
-                                                <p
+                            <p
                                                     class="text-center text-h6"
                                                     elevation="0"
                                                 >
@@ -403,7 +361,7 @@ onMounted(() => {
                                                 <h4>Hora de finalización:</h4>
                                                 <p
                                                     class="text-center text-h6"
-                                                    elevation="0"
+                                                    
                                                 >
                                                     {{ itemSelected.hora_F }}
                                                 </p>
@@ -416,7 +374,7 @@ onMounted(() => {
                                                 </h4>
                                                 <p
                                                     class="text-h6 ml-3"
-                                                    elevation="0"
+                                                    
                                                 >
                                                     {{
                                                         itemSelected.objetivoEvento
@@ -453,21 +411,17 @@ onMounted(() => {
                                         </v-row>
                                     </v-container>
                                 </v-card-text>
+                            </v-sheet>
                         </v-row>
                     </v-container>
                 </v-card>
             </v-dialog>
         </v-main>
-    </v-layout>
+    </v-layout>               
 </template>
-
 
 <style>
 . itemSelected {
     background-color: red;
-}
-h4 {
-    margin-left: 12px;
-    margin-bottom: 4px;
 }
 </style>

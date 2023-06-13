@@ -1,7 +1,7 @@
 <script setup>
-    import Carrera from "./parametros_components/Carrera.vue";
+    import DesarrolloHeader from "./header/DesarrolloHeader.vue";
+import Carrera from "./parametros_components/Carrera.vue";
     import {Link} from "@inertiajs/vue3";
-    import Nav from "../AuthHeader/Nav.vue";
 
     const props = defineProps({
         user: Array,
@@ -12,7 +12,7 @@
 
 <template>
     <v-layout>
-        <Nav :usuario="props.user"/>
+        <DesarrolloHeader :usuario="props.user"/>
         <v-main>
             <v-container fluid>
                 <v-row justify="center">

@@ -1,6 +1,8 @@
 <script setup>
 import {computed, onMounted, ref} from "vue";
 import {Link, router, usePage} from "@inertiajs/vue3";
+import AcademicsHeader from "./AuthHeader/AcademicsHeader.vue";
+import Estado from "../alerts/Estado.vue"
 // props
 const props = defineProps({
     carer: Array,
@@ -12,16 +14,7 @@ const drawer = ref(true);
 const dialog = ref(false);
 let dialogPDF = ref(false);
 let itemSelected = ref({});
-const menu = ref([
-    {
-        id: 1,
-        name: "Deteccion de Necesidades",
-    },
-    {
-        id: 1,
-        name: "PIFAP",
-    },
-]);
+
 // functions
 function getRow(item){
     itemSelected.value = item
@@ -31,15 +24,7 @@ const formatDate = computed(() => {
     return new Date(itemSelected.value.fecha_F).toLocaleDateString('es-MX');
 })
 // Computed propierties
-const user = computed(() => usePage().props.user[0]);
 
-const observaciones = computed(() => {
-    let data = usePage().props.detecciones.filter(value => {
-        return value.obs
-    });
-
-    return data.length !== 0;
-});
 
 const dateFormat = computed(() => {
     return new Date(itemSelected.value.fecha_I).toLocaleDateString('es-MX');
@@ -47,46 +32,7 @@ const dateFormat = computed(() => {
 </script>
 <template>
      <v-layout>
-         <v-navigation-drawer v-model="drawer" color="light-blue-darken-4">
-             <v-list>
-                 <v-list-item
-
-                 >
-                     {{props.user[0].email}}
-                 </v-list-item>
-             </v-list>
-             <v-divider></v-divider>
-             <v-list color="transparent">
-                 <Link href="/dashboard" as="v-list-item">
-                     <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
-                 </Link>
-
-                 <Link href="/academicos/cursos" as="v-list-item">
-                     <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
-                 </Link>
-                 <Link href="/academicos/detecciones" as="v-list-item">
-                     <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
-                 </Link>
-
-                 <Link href="/docentes/mis-datos" as="v-list-item">
-                     <v-list-item link prepend-icon="" title="Mi información"></v-list-item>
-                 </Link>
-             </v-list>
-
-             <template v-slot:append>
-                 <div class="pa-2">
-                     <Link href="/logout" as="v-btn" method="post">
-                         <v-btn block color="light-blue-darken-1">
-                             Logout
-                         </v-btn>
-                     </Link>
-                 </div>
-             </template>
-         </v-navigation-drawer>
-         <v-app-bar-nav-icon></v-app-bar-nav-icon>
-         <v-app-bar class="">
-             <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
-         </v-app-bar>
+        <AcademicsHeader :usuario="props.user"/>
 
          <v-main>
              <v-container class="mt-2 pt-2">
@@ -124,19 +70,19 @@ const dateFormat = computed(() => {
                             <v-sheet
                                 class="d-flex justify-start align-center"
                             >
-                                <span class="text-h6">Necesidades recientes</span>
+                                <span class="text-h6">Recientes</span>
                             </v-sheet>
                         </v-col>
                      </v-row>
                   </v-container>
                  <v-container>
                      <v-row justify="center">
-                         <v-col cols="12">
-                             <v-card elevation="7">
+                         <v-col cols="9">
                                  <v-table
                                      fixed-header
-                                     height="300px"
+                                     height="400px"
                                      hover
+                                     
                                  >
                                      <thead>
                                      <tr>
@@ -152,11 +98,9 @@ const dateFormat = computed(() => {
                                          <th class="text-left">
                                              Objetivo de la actividad o evento
                                          </th>
-                                         <template v-if="observaciones === true">
-                                             <th class="text-left">
-                                                 Observaciones
-                                             </th>
-                                         </template>
+                                         <th class="text-left">
+                                            Observaciones
+                                        </th>
                                          <th>Estado</th>
                                      </tr>
                                      </thead>
@@ -176,11 +120,13 @@ const dateFormat = computed(() => {
                                              <td class="v-card--hover">AGOSTO-DICIEMBRE</td>
                                          </template>
                                          <td class="v-card--hover">{{deteccion.objetivoEvento}}</td>
-                                    
+                                            <td>{{ deteccion.observaciones }}</td>
+                                         <td class="ma-4 pa-4">
+                                            <Estado :estadoDeteccion="props.detecciones"/>
+                                         </td>
                                      </tr>
                                      </tbody>
                                  </v-table>
-                             </v-card>
                          </v-col>
                      </v-row>
                  </v-container>
@@ -199,6 +145,7 @@ const dateFormat = computed(() => {
                  <v-toolbar
                      dark
                      color="light-blue-darken-4"
+                     style="position: fixed;"
 
                  >
                      <v-btn
@@ -220,7 +167,6 @@ const dateFormat = computed(() => {
                  <v-container class="mx-auto">
                      <v-row justify="center">
                          <v-spacer></v-spacer>
-                         <v-card width="1700" class="pa-5 ma-5">
                             <v-card-title class="text-center text-h4">
                                 {{itemSelected.nombreCurso}}
                             </v-card-title>
@@ -345,7 +291,7 @@ const dateFormat = computed(() => {
                                      </v-col>
                                      <template v-if="itemSelected.obs === 1">
                                          <v-col cols="12" class="mt-4">
-                                             <h4 class="ml-0 pl-0">Objetivo de la actividad o evento.</h4>
+                                             <h4 class="ml-0 pl-0">Observaciones</h4>
                                              <p class="text-h6 text-center">
                                                  {{itemSelected.observaciones}}
                                              </p>
@@ -353,7 +299,6 @@ const dateFormat = computed(() => {
                                      </template>
                                  </v-row>
                              </v-container>
-                         </v-card>
                      </v-row>
                  </v-container>
              </v-card>

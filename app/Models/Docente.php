@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class Docente extends Model
 {
     use HasFactory;
@@ -24,5 +24,10 @@ class Docente extends Model
 
     public function Users(){
         return $this->belongsTo(User::class, 'docente_id');
+    }
+    
+    public function detecciones(): HasMany
+    {
+        return $this->hasMany(DeteccionNecesidades::class, 'id_jefe');
     }
 }

@@ -1,7 +1,7 @@
 <script setup>
 import {computed, ref} from "vue";
 import {usePage, Link} from "@inertiajs/vue3";
-import Nav from "../../../AuthHeader/Nav.vue";
+import DesarrolloHeader from "../../header/DesarrolloHeader.vue";
 
 const props = defineProps({
     user: Array,
@@ -25,42 +25,7 @@ function getRow(item) {
 
 <template>
     <v-layout>
-        <v-navigation-drawer v-model="drawer">
-            <v-list>
-                <v-list-item
-
-                >
-                    {{props.user[0].email}}
-                </v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-            <v-list color="transparent">
-                <Link href="/dashboard" as="v-list-item">
-                    <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
-                </Link>
-
-                    <Link href="/desarrollo/coordinacion/cursos" as="v-list-item">
-                        <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
-                    </Link>
-                    <Link href="/desarrollo/coordinacion/deteccion" as="v-list-item">
-                        <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
-                    </Link>
-            </v-list>
-
-            <template v-slot:append>
-                <div class="pa-2">
-                    <Link href="/logout" as="v-btn" method="post">
-                        <v-btn block>
-                            Logout
-                        </v-btn>
-                    </Link>
-                </div>
-            </template>
-        </v-navigation-drawer>
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
-        <v-app-bar class="">
-            <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
-        </v-app-bar>
+        <DesarrolloHeader :usuario="props.user"/>
         <v-main>
             <v-container class="mt-4 pt-4">
                 <v-row justify="center">

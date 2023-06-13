@@ -9,6 +9,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, Notifiable;
@@ -43,5 +46,10 @@ class User extends Authenticatable
 
     public function docente(){
         return $this->hasOne(Docente::class, 'user_id');
+    }
+    
+    public function detecciones(): HasMany
+    {
+        return $this->hasMany(DeteccionNecesidades::class, 'id_jefe');
     }
 }

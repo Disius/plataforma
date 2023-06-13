@@ -1,45 +1,96 @@
+<script setup>
+import {computed, onMounted, ref} from "vue";
+import {Link, useForm, usePage} from "@inertiajs/vue3";
+import DesarrolloHeader from "../../desarrollo/header/DesarrolloHeader.vue";
+import AcademicsHeader from "../../academicos/AuthHeader/AcademicsHeader.vue";
+
+const props = defineProps({
+    puesto: null,
+    departamento: null,
+    carrera: null,
+    tipo_plaza: null,
+    docente: null,
+    user: Array,
+});
+const drawer = ref(true);
+const CURPValidator = [
+    value => {
+        if (value?.length <= 18 && /^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/.test(value)) return true
+
+        return "La CURP no es correcta"
+    }
+]
+const RFCValidator = [
+    value => {
+        if (value?.length <= 13 && /^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([A-Z\d]{3})?$/.test(value)) return true
+
+        return "El RFC es incorrecto"
+    }
+]
+ //const counter = [value => value.length <= 10 || 'Max 10 characters']
+let emailEdit = ref(false);
+const edit = ref(false);
+const nuevo = ref(false);
+let alert = ref(true)
+let alertFirstTime = ref(true)
+const user = computed(() => usePage().props.user[0]);
+const formDocente = useForm({
+    id: user.value.id,
+    rfc: "",
+    curp: "",
+    nombre: "",
+    apellidoPat: "",
+    apellidoMat: "",
+    sexo: null,
+    email: null,
+    telefono: "",
+    carrera_id: null,
+    id_puesto: null,
+    tipo_plaza: null,
+    departamento_id: null,
+})
+
+
+const sex = [{value: 1, text: "M"}, {value: 2, text: "F"}]
+
+function submitNewDocente(){
+    nuevo.value = false
+    return formDocente.post('/docentes/guardar')
+}
+
+function submitEditDocente(){
+    edit.value = false;
+    formDocente.nombre = props.docente.nombre;
+    formDocente.apellidoPat = props.docente.apellidoPat;
+    formDocente.apellidoMat = props.docente.apellidoMat;
+    formDocente.curp = props.docente.curp;
+    formDocente.rfc = props.docente.rfc;
+    formDocente.sexo = props.docente.sexo;
+    formDocente.email = props.docente.email;
+    formDocente.carrera_id = props.docente.carrera_id;
+    formDocente.id_puesto = props.docente.id_puesto;
+    formDocente.tipo_plaza = props.docente.tipo_plaza;
+    formDocente.departamento_id = props.docente.departamento_id;
+    return formDocente.put('/docentes/editar' + '/' + props.docente.id)
+}
+
+onMounted(() => {
+    setTimeout(() => {
+        alert.value = false
+    }, 20000)
+    setTimeout(() => {
+        alertFirstTime.value = false
+    }, 20000)
+})
+</script>
 <template>
     <v-layout>
-        <v-navigation-drawer v-model="drawer" color="light-blue-darken-4">
-            <v-list>
-                <v-list-item
-
-                >
-                                    {{props.user[0].email}}
-                </v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-            <v-list color="transparent">
-                <Link href="/dashboard" as="v-list-item">
-                    <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
-                </Link>
-
-                <Link href="/academicos/cursos" as="v-list-item">
-                    <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
-                </Link>
-                <Link href="/academicos/detecciones" as="v-list-item">
-                    <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
-                </Link>
-
-                <Link href="/docentes/mis-datos" as="v-list-item">
-                     <v-list-item link prepend-icon="" title="Mi información"></v-list-item>
-                </Link>
-            </v-list>
-
-            <template v-slot:append>
-                <div class="pa-2">
-                    <Link href="/logout" as="v-btn" method="post">
-                        <v-btn block color="light-blue-darken-1">
-                            Logout
-                        </v-btn>
-                    </Link>
-                </div>
-            </template>
-        </v-navigation-drawer>
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
-        <v-app-bar class="">
-            <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
-        </v-app-bar>
+        <template v-if="props.user[0].role === 1 || props.user[0].role === 2">
+            <DesarrolloHeader :usuario="props.user"/>
+        </template>
+        <template v-if="props.user[0].role === 3">
+            <AcademicsHeader :usuario="props.user"/>
+        </template>
         <v-main>
             <v-container class="mx-auto">
                 <v-row justify="center" class="mt-4">
@@ -431,90 +482,6 @@
     </v-layout>
 </template>
 
-<script setup>
-import {computed, onMounted, ref} from "vue";
-import {Link, useForm, usePage} from "@inertiajs/vue3";
-import NavD from "../../AuthHeader/Nav.vue";
-
-const props = defineProps({
-    puesto: null,
-    departamento: null,
-    carrera: null,
-    tipo_plaza: null,
-    docente: null,
-    user: Array,
-});
-const drawer = ref(true);
-const CURPValidator = [
-    value => {
-        if (value?.length <= 18 && /^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/.test(value)) return true
-
-        return "La CURP no es correcta"
-    }
-]
-const RFCValidator = [
-    value => {
-        if (value?.length <= 13 && /^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([A-Z\d]{3})?$/.test(value)) return true
-
-        return "El RFC es incorrecto"
-    }
-]
- //const counter = [value => value.length <= 10 || 'Max 10 characters']
-let emailEdit = ref(false);
-const edit = ref(false);
-const nuevo = ref(false);
-let alert = ref(true)
-let alertFirstTime = ref(true)
-const user = computed(() => usePage().props.user[0]);
-const formDocente = useForm({
-    id: user.value.id,
-    rfc: "",
-    curp: "",
-    nombre: "",
-    apellidoPat: "",
-    apellidoMat: "",
-    sexo: null,
-    email: null,
-    telefono: "",
-    carrera_id: null,
-    id_puesto: null,
-    tipo_plaza: null,
-    departamento_id: null,
-})
-
-
-const sex = [{value: 1, text: "M"}, {value: 2, text: "F"}]
-
-function submitNewDocente(){
-    nuevo.value = false
-    return formDocente.post('/docentes/guardar')
-}
-
-function submitEditDocente(){
-    edit.value = false;
-    formDocente.nombre = props.docente.nombre;
-    formDocente.apellidoPat = props.docente.apellidoPat;
-    formDocente.apellidoMat = props.docente.apellidoMat;
-    formDocente.curp = props.docente.curp;
-    formDocente.rfc = props.docente.rfc;
-    formDocente.sexo = props.docente.sexo;
-    formDocente.email = props.docente.email;
-    formDocente.carrera_id = props.docente.carrera_id;
-    formDocente.id_puesto = props.docente.id_puesto;
-    formDocente.tipo_plaza = props.docente.tipo_plaza;
-    formDocente.departamento_id = props.docente.departamento_id;
-    return formDocente.put('/docentes/editar' + '/' + props.docente.id)
-}
-
-onMounted(() => {
-    setTimeout(() => {
-        alert.value = false
-    }, 20000)
-    setTimeout(() => {
-        alertFirstTime.value = false
-    }, 20000)
-})
-</script>
 
 <style scoped>
 

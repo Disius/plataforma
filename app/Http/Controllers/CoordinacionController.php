@@ -15,24 +15,20 @@ class CoordinacionController extends Controller
      */
     public function index()
     {
-        $necesidades = DeteccionNecesidades::with('deteccion_facilitador')
-            ->orderBy('id', 'desc')
-            ->where('aceptado', '=', 0)
-            ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
-            ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
-            ->select("deteccion_necesidades.*", "carreras.nameCarrera", "docente.nombre as Nombre")
-            ->get();
-        $necesidadesAceptadas = DeteccionNecesidades::with('deteccion_facilitador')
-            ->orderBy('deteccion_necesidades.id', 'desc')
-            ->where('deteccion_necesidades.aceptado', '=', 1)
-            ->join('docente', 'docente.id', '=', 'deteccion_necesidades.id_jefe')
-            ->join('carreras', 'carreras.id', '=', 'deteccion_necesidades.carrera_dirigido')
-            ->select("deteccion_necesidades.*", "carreras.nameCarrera", "docente.nombre as Nombre")
-            ->get();
+        $detecciones = DeteccionNecesidades::with(['carrera', 'deteccion_facilitador', 'jefe'])
+        ->where('aceptado', '=', 0)->get();
 
         return Inertia::render('desarrollo/coordinacion/Necesidades', [
-            'detection' => $necesidades,
-            'deteccionesAceptadas' => $necesidadesAceptadas
+            'detection' => $detecciones,
+        ]);
+    }
+
+    public function allRegistros() {
+        $detecciones = DeteccionNecesidades::with(['carrera', 'deteccion_facilitador'])
+        ->where('aceptado', '=', 1)->get();
+
+        return Inertia::render('desarrollo/coordinacion/TodasNecesidades', [
+            'detection' => $detecciones,
         ]);
     }
 
@@ -106,27 +102,12 @@ class CoordinacionController extends Controller
 
 
     public function indexCursos(){
-        $cursos = DB::table('cursos')
-                    ->join('carreras', 'carreras.id', '=', 'cursos.dirigido')
-                    ->select('cursos.*', 'carreras.nameCarrera AS nombreCarrera')
-                    ->get();
+        $cursos = DeteccionNecesidades::with(['carrera', 'deteccion_facilitador'])
+        ->where('aceptado', '=', 1)->get();
         return Inertia::render('desarrollo/coordinacion/curso/Curso', [
             'cursos' => $cursos
         ]);
     }
 
-    public function storeCursos(Request $request, $id){
-
-        $detecciones = DeteccionNecesidades::find($id);
-
-        $detecciones->aceptado = $request->aceptado;
-
-        $detecciones->save();
-        $request->except(['aceptado']);
-
-        $curso = Curso::create($request->all());
-
-        $curso->save();
-
-    }
+    
 }
