@@ -78,7 +78,8 @@ const dateFormat = computed(() => {
                  <v-container>
                      <v-row justify="start">
                          <v-col cols="11">
-                                 <v-table
+                            <v-card width="1560">
+                                <v-table
                                      fixed-header
                                      height="400px"
                                      hover
@@ -141,6 +142,7 @@ const dateFormat = computed(() => {
                                      </tr>
                                      </tbody>
                                  </v-table>
+                            </v-card>    
                          </v-col>
                      </v-row>
                  </v-container>
