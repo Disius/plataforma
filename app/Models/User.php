@@ -45,11 +45,11 @@ class User extends Authenticatable
     ];
 
     public function docente(){
-        return $this->hasOne(Docente::class, 'user_id');
+        return $this->hasOne(Docente::class, 'docente_id');
     }
-    
-    public function detecciones(): HasMany
+
+    public function detecciones(): BelongsTo
     {
-        return $this->hasMany(DeteccionNecesidades::class, 'id_jefe');
+        return $this->belongsTo(DeteccionNecesidades::class, 'id_jefe');
     }
 }

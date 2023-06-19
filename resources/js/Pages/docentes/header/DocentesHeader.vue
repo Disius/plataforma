@@ -6,7 +6,6 @@ const drawer = ref(true);
 const props = defineProps({
     usuario: Array
 });
-console.log(props.usuario)
 </script>
 
 <template>
@@ -24,15 +23,10 @@ console.log(props.usuario)
                     <v-list-item link prepend-icon="" title="Inicio"></v-list-item>
                 </Link>
 
-                <Link href="/academicos/cursos" as="v-list-item">
+                <Link href="/docentes/cursos" as="v-list-item">
                     <v-list-item link prepend-icon="" title="Cursos"></v-list-item>
                 </Link>
-                <Link href="/academicos/detecciones" as="v-list-item">
-                    <v-list-item link prepend-icon="" title="Deteccion de Necesidades"></v-list-item>
-                </Link>
-                <Link href="/academicos/docentes" as="v-list-item">
-                    <v-list-item link prepend-icon="" title="Docentes"></v-list-item>
-                </Link>
+                
                 <Link href="/docentes/mis-datos" as="v-list-item">
                      <v-list-item link prepend-icon="" title="Mi información"></v-list-item>
                 </Link>

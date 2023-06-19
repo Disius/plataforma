@@ -41,7 +41,7 @@ const props = defineProps({
                 <div class="pa-2">
                     <Link href="/logout" as="v-btn" method="post">
                         <v-btn block color="light-blue-darken-1">
-                            Logout
+                            Cerrar Sesión
                         </v-btn>
                     </Link>
                 </div>

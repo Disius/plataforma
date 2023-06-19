@@ -22,12 +22,9 @@ class Docente extends Model
         return $this->belongsToMany(Curso::class, 'inscripcion', 'docente_id', 'curso_id');
     }
 
-    public function Users(){
-        return $this->belongsTo(User::class, 'docente_id');
+    public function usuario(){
+        return $this->hasOne(User::class, 'user_id', 'id');
     }
-    
-    public function detecciones(): HasMany
-    {
-        return $this->hasMany(DeteccionNecesidades::class, 'id_jefe');
-    }
+
+
 }

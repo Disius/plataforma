@@ -16,7 +16,7 @@ const props = defineProps({
             <Main :user="props.user"></Main>
         </template>
         <template v-if="props.user[0].role === 4">
-            <MainDocente></MainDocente>
+            <MainDocente :user="props.user"></MainDocente>
         </template>
     </v-app>
 </template>

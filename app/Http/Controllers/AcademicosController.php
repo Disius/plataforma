@@ -7,6 +7,8 @@ use App\Models\Curso;
 use App\Models\Departamento;
 use App\Models\DeteccionNecesidades;
 use App\Models\Docente;
+use App\Models\User;
+use App\Notifications\FODAPNotifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -20,7 +22,7 @@ class AcademicosController extends Controller
     {
 
         $detecciones = DeteccionNecesidades::with(['carrera', 'deteccion_facilitador'])
-        ->where('aceptado', '=', 0)->where('id_jefe', auth()->user()->docente_id)->get();
+        ->where('aceptado', '=', 0)->where('id_jefe', auth()->user()->docente_id)->orderBy('id', 'desc')->get();
 
         $carrera = Carrera::all();
         return Inertia::render('academicos/DeteccionNecesidades', [
@@ -66,7 +68,6 @@ class AcademicosController extends Controller
             'dirigido' => 'required',
             'id_jefe' => 'required',
             'modalidad' => ['required'],
-            'facilitador_externo' => ['required']
         ]);
 
         $deteccion = DeteccionNecesidades::create([
@@ -92,6 +93,10 @@ class AcademicosController extends Controller
         $deteccion->save();
 
         $deteccion->deteccion_facilitador()->sync($request->input('facilitadores', []));
+
+        User::role(['Coordinacion de FD y AP'])->each(function(User $user) use ($deteccion){
+            $user->notify(new FODAPNotifications($deteccion, $user));
+        });
 
         return redirect()->route('index.necesity');
     }

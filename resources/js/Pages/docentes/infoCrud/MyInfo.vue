@@ -3,6 +3,7 @@ import {computed, onMounted, ref} from "vue";
 import {Link, useForm, usePage} from "@inertiajs/vue3";
 import DesarrolloHeader from "../../desarrollo/header/DesarrolloHeader.vue";
 import AcademicsHeader from "../../academicos/AuthHeader/AcademicsHeader.vue";
+import DocentesHeader from "../header/DocentesHeader.vue";
 
 const props = defineProps({
     puesto: null,
@@ -90,6 +91,9 @@ onMounted(() => {
         </template>
         <template v-if="props.user[0].role === 3">
             <AcademicsHeader :usuario="props.user"/>
+        </template>
+        <template v-if="props.user[0].role === 4">
+            <DocentesHeader :usuario="props.user"/>
         </template>
         <v-main>
             <v-container class="mx-auto">

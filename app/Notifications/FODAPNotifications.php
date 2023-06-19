@@ -33,7 +33,7 @@ class FODAPNotifications extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'broadcast'];
+        return ['database'];
     }
 
     /**
@@ -55,8 +55,17 @@ class FODAPNotifications extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'user' =>  $this->user,
-            'deteccion' => $this->necesidades
+            'v' => $this->user->detecciones,
+            'id' => $this->necesidades->id,
+            'is_clean' => $this->necesidades->isClean(),
+            'is_dirty' => $this->necesidades->isDirty(),
+            'changed?' => $this->necesidades->wasChanged(),
         ];
     }
 }
+// Para notificar, es cuando se crea una instancia de deteccion de necesidades, cuando se modifica, esto es para desarrollo
+// || ||      cuando existe una observacion
+
+// id de la deteccion, id del usuario, usar metodos isDirty, isClean and wasChanged, para determinar si ha recibido cambios
+
+// id_jefe, id_deteccion, and try with the three methods
