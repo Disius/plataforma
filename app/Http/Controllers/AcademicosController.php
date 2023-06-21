@@ -8,7 +8,7 @@ use App\Models\Departamento;
 use App\Models\DeteccionNecesidades;
 use App\Models\Docente;
 use App\Models\User;
-use App\Notifications\FODAPNotifications;
+use App\Notifications\CoordiNotifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -95,7 +95,7 @@ class AcademicosController extends Controller
         $deteccion->deteccion_facilitador()->sync($request->input('facilitadores', []));
 
         User::role(['Coordinacion de FD y AP'])->each(function(User $user) use ($deteccion){
-            $user->notify(new FODAPNotifications($deteccion, $user));
+            $user->notify(new CoordiNotifications($deteccion, $user));
         });
 
         return redirect()->route('index.necesity');

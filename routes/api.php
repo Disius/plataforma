@@ -21,3 +21,4 @@ use App\Http\Controllers\AcademicosController;
 });*/
 
 
+Route::get('/notifications', [CoordinacionController::class, 'notificationTest']);

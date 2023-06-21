@@ -56,7 +56,7 @@ onMounted(() => {
 <template>
     <v-layout>
         <DesarrolloHeader :usuario="props.user"/>
-        <v-main>
+        <v-main class="ml-0">
             <v-container class="mt-2 pt-2">
 
                 <v-row justify="center" class="mt-4">
@@ -67,7 +67,7 @@ onMounted(() => {
                             </v-sheet>
                 </v-row>
                 <v-row justify="center" class="mt-7 pt-7">
-                        <v-card elevation="8" width="1500px">
+                        <v-card elevation="8" width="1570px">
                             <v-table fixed-header height="500px" hover>
                                 <thead>
                                 <tr>
@@ -186,7 +186,7 @@ onMounted(() => {
                     </v-toolbar>
                     <v-container class="mt-16">
                         <v-row justify="center">
-                            
+
                                 <v-card-title class="text-center text-h5">
                                     {{ itemSelected.nombreCurso }}
                                 </v-card-title>

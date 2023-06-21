@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class FODAPNotifications extends Notification
+class CoordiNotifications extends Notification
 {
     use Queueable;
 
@@ -55,7 +55,7 @@ class FODAPNotifications extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'v' => $this->user->detecciones,
+            'email' => $this->necesidades->jefe_academico->email,
             'id' => $this->necesidades->id,
             'is_clean' => $this->necesidades->isClean(),
             'is_dirty' => $this->necesidades->isDirty(),

@@ -2,6 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\CoordinacionController;
+use App\Http\Controllers\NotificacionesController;
+use App\Models\User;
+use App\Notifications\CoordiNotifications;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,9 +45,9 @@ class HandleInertiaRequests extends Middleware
                 ? $request->user()
                 : null
             ],
-            'flash' => [
-                'alert' => $request->session()->get('alert'),
-            ],
+            'notification' => [
+                fn(NotificacionesController $controller) => $controller->notificationCoordinacion()
+            ]
         ]);
     }
 }

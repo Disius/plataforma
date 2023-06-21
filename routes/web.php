@@ -5,6 +5,7 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\CoordinacionController;
 use App\Http\Controllers\DesarrolloController;
 use App\Http\Controllers\DocentesController;
+use App\Http\Controllers\NotificacionesController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -41,7 +42,7 @@ Route::prefix('desarrollo')->middleware(['auth', 'role:Jefe del Departamento de 
     Route::get('/coordinacion/deteccion', [CoordinacionController::class, 'index'])->name('index.necesidad');
     Route::put('/coordinacion/observaciones/{id}', [CoordinacionController::class, 'update'])->name('update.observacion');
     Route::get('/coordinacion/registros', [CoordinacionController::class, 'allRegistros'])->name('todos.registros');
-
+    Route::post('/notification/read/{id}', [NotificacionesController::class, 'read_notifications']);
     Route::get('/coordinacion/cursos', [CoordinacionController::class, 'indexCursos']);
     Route::post('/coordinacion/guardado/{id}', [CoordinacionController::class, 'store']);
 });

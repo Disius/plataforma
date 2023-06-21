@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Curso;
 use App\Models\DeteccionNecesidades;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -101,7 +101,8 @@ class CoordinacionController extends Controller
     }
 
 
-    public function indexCursos(){
+    public function indexCursos(): \Inertia\Response
+    {
         $cursos = DeteccionNecesidades::with(['carrera', 'deteccion_facilitador'])
         ->where('aceptado', '=', 1)->get();
         return Inertia::render('desarrollo/coordinacion/curso/Curso', [
@@ -109,5 +110,14 @@ class CoordinacionController extends Controller
         ]);
     }
 
-    
+    public function notificationTest(): \Illuminate\Database\Eloquent\Collection|array|null
+    {
+        if (auth()->user() != null){
+            return User::with(['notifications'])->where('id', auth()->user()->id)->get();
+        } else {
+            return null;
+        }
+    }
+
+
 }

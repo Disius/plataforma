@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -45,11 +45,10 @@ class User extends Authenticatable
     ];
 
     public function docente(){
-        return $this->hasOne(Docente::class, 'docente_id');
+        return $this->belongsTo(Docente::class, 'docente_id');
     }
 
-    public function detecciones(): BelongsTo
-    {
-        return $this->belongsTo(DeteccionNecesidades::class, 'id_jefe');
-    }
+//    public function jefe(){
+//        return $this->hasMany(DeteccionNecesidades::class, 'id_jefe', 'docente_id');
+//    }
 }

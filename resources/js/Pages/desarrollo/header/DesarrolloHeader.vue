@@ -4,7 +4,10 @@ import {Link} from '@inertiajs/vue3'
 const drawer = ref(true);
 const props = defineProps({
     usuario: Array,
-})
+    n2: Array
+});
+
+
 </script>
 <template>
 <v-navigation-drawer v-model="drawer" color="light-blue-darken-4">
@@ -50,6 +53,33 @@ const props = defineProps({
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
         <v-app-bar class="">
             <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
+            <v-spacer></v-spacer>
+            <v-menu class="" location="start">
+                <template v-slot:activator="{ props }">
+                    <v-btn stacked size="x-large"  v-bind="props" class="mr-6 pr-6">
+                        <v-badge
+                            :content="n2[0].notifications.length"
+                            color="error"
+                        >
+                            <v-icon icon="mdi-bell"></v-icon>
+                        </v-badge>
+
+
+                    </v-btn>
+                </template>
+                <v-list>
+                    <v-list-item
+                        v-for="(item, index) in n2"
+                        :key="item"
+                        link
+                        prepend-icon="mdi-account-details"
+                    >
+                        <Link method="post" :href="'/desarrollo/notification/read' + '/' + item.id" as="v-list-item-title" type="v-list-item-title">
+                            <v-list-item-title>{{  }} a creado una nueva Deteccion de necesidades</v-list-item-title>
+                        </Link>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </v-app-bar>
 </template>
 

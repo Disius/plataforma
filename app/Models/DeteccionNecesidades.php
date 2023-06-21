@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GrahamCampbell\ResultType\Error;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -52,8 +53,13 @@ class DeteccionNecesidades extends Model
         return $this->hasOne(Carrera::class, 'id', 'carrera_dirigido');
     }
 
-    public function jefe_academico(){
-        return $this->hasOne(User::class, 'docente_id', 'id_jefe');
+    public function jefe_academico(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_jefe', 'docente_id');
+    }
+
+    public function jefe(){
+        return $this->belongsTo(Docente::class, 'id_jefe');
     }
 
 }
