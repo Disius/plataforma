@@ -9,6 +9,7 @@ import DesarrolloHeader from "../header/DesarrolloHeader.vue";
 const props = defineProps({
     user: Array,
     detection: Array,
+    notification: Array
 })
 //variables
 let itemSelected = ref({});
@@ -55,7 +56,7 @@ onMounted(() => {
 
 <template>
     <v-layout>
-        <DesarrolloHeader :usuario="props.user"/>
+        <DesarrolloHeader :n2="props.notification" :usuario="props.user"/>
         <v-main class="ml-0">
             <v-container class="mt-2 pt-2">
 

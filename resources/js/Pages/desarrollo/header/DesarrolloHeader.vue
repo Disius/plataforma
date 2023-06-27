@@ -54,32 +54,50 @@ const props = defineProps({
         <v-app-bar class="">
             <v-icon size="x-large" class="ml-4" @click="drawer = !drawer">mdi-menu</v-icon>
             <v-spacer></v-spacer>
-            <v-menu class="" location="start">
-                <template v-slot:activator="{ props }">
-                    <v-btn stacked size="x-large"  v-bind="props" class="mr-6 pr-6">
-                        <v-badge
-                            :content="n2[0].notifications.length"
-                            color="error"
-                        >
-                            <v-icon icon="mdi-bell"></v-icon>
-                        </v-badge>
+                <v-menu class="" location="start">
+                    <template v-slot:activator="{ props }">
+                        <v-btn stacked size="x-large"  v-bind="props" class="mr-6 pr-6">
+                            <v-badge
+                                :content="n2.length"
+                                color="error"
+                            >
+                                <v-icon icon="mdi-bell"></v-icon>
+                            </v-badge>
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <template v-if="n2.length > 0">
+                            <v-list-item
+                                v-for="(item, index) in n2"
+                                :key="item"
+                                prepend-icon="mdi-account-details"
+                            >
+                                <v-list-item-title>{{ item.data.email }} a creado una nueva Deteccion de necesidades</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-action>
+                                    <v-row justify="end">
+                                        <v-col cols="7 ">
+                                            <Link method="post" :href="'/desarrollo/notification/read' + '/' + n2[0].notifiable_id" as="v-btn" type="v-btn">
+                                                <v-btn>
+                                                    Ir a Deteccion de Necesidades
+                                                </v-btn>
+                                            </Link>
+                                        </v-col>
+                                    </v-row>
+                                </v-list-item-action>
+                            </v-list-item>
+                        </template>
+                        <template v-else>
+                            <v-list-item
 
+                            >
+                            <v-list-item-title>Sin notificaciones recientes</v-list-item-title>
 
-                    </v-btn>
-                </template>
-                <v-list>
-                    <v-list-item
-                        v-for="(item, index) in n2"
-                        :key="item"
-                        link
-                        prepend-icon="mdi-account-details"
-                    >
-                        <Link method="post" :href="'/desarrollo/notification/read' + '/' + item.id" as="v-list-item-title" type="v-list-item-title">
-                            <v-list-item-title>{{  }} a creado una nueva Deteccion de necesidades</v-list-item-title>
-                        </Link>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
+                            </v-list-item>
+                        </template>
+                    </v-list>
+                </v-menu>
         </v-app-bar>
 </template>
 

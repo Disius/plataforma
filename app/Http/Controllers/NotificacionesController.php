@@ -10,7 +10,8 @@ class NotificacionesController extends Controller
     public function notificationCoordinacion(): \Illuminate\Database\Eloquent\Collection|array|null
     {
         if (auth()->user() != null){
-            return User::with(['notifications'])->where('id', auth()->user()->id)->get();
+            $user = User::find(auth()->user()->id);
+            return $user->unreadNotifications;
         } else {
             return null;
         }
@@ -18,6 +19,10 @@ class NotificacionesController extends Controller
     public function read_notifications($id){
         $user = User::find($id);
 
-        echo $user;
+        foreach ($user->unreadNotifications as $notification){
+            $notification->markAsRead();
+        }
+
+        return redirect()->route('index.necesidad');
     }
 }
